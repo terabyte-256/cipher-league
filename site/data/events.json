@@ -1,0 +1,8 @@
+{
+  "source": "CISA Known Exploited Vulnerabilities (KEV)",
+  "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+  "catalog_version": null,
+  "released_at": null,
+  "sample": false,
+  "events": []
+}

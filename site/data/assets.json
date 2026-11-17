@@ -1,0 +1,2268 @@
+[
+  {
+    "slug": "volatility",
+    "name": "Volatility 3",
+    "position": "DFIR",
+    "provider": "github_repo",
+    "key": "volatilityfoundation/volatility3",
+    "source_url": "https://github.com/volatilityfoundation/volatility3"
+  },
+  {
+    "slug": "velociraptor",
+    "name": "Velociraptor",
+    "position": "DFIR",
+    "provider": "github_repo",
+    "key": "Velocidex/velociraptor",
+    "source_url": "https://github.com/Velocidex/velociraptor"
+  },
+  {
+    "slug": "autopsy",
+    "name": "Autopsy",
+    "position": "DFIR",
+    "provider": "github_repo",
+    "key": "sleuthkit/autopsy",
+    "source_url": "https://github.com/sleuthkit/autopsy"
+  },
+  {
+    "slug": "plaso",
+    "name": "Plaso",
+    "position": "DFIR",
+    "provider": "github_repo",
+    "key": "log2timeline/plaso",
+    "source_url": "https://github.com/log2timeline/plaso"
+  },
+  {
+    "slug": "timesketch",
+    "name": "Timesketch",
+    "position": "DFIR",
+    "provider": "github_repo",
+    "key": "google/timesketch",
+    "source_url": "https://github.com/google/timesketch"
+  },
+  {
+    "slug": "hayabusa",
+    "name": "Hayabusa",
+    "position": "DFIR",
+    "provider": "github_repo",
+    "key": "Yamato-Security/hayabusa",
+    "source_url": "https://github.com/Yamato-Security/hayabusa"
+  },
+  {
+    "slug": "chainsaw",
+    "name": "Chainsaw",
+    "position": "DFIR",
+    "provider": "github_repo",
+    "key": "WithSecureLabs/chainsaw",
+    "source_url": "https://github.com/WithSecureLabs/chainsaw"
+  },
+  {
+    "slug": "wireshark",
+    "name": "Wireshark",
+    "position": "DFIR",
+    "provider": "github_repo",
+    "key": "wireshark/wireshark",
+    "source_url": "https://github.com/wireshark/wireshark"
+  },
+  {
+    "slug": "rekall",
+    "name": "Rekall",
+    "position": "DFIR",
+    "provider": "github_repo",
+    "key": "google/rekall",
+    "source_url": "https://github.com/google/rekall"
+  },
+  {
+    "slug": "osquery",
+    "name": "osquery",
+    "position": "DFIR",
+    "provider": "github_repo",
+    "key": "osquery/osquery",
+    "source_url": "https://github.com/osquery/osquery"
+  },
+  {
+    "slug": "sleuthkit",
+    "name": "The Sleuth Kit",
+    "position": "DFIR",
+    "provider": "github_repo",
+    "key": "sleuthkit/sleuthkit",
+    "source_url": "https://github.com/sleuthkit/sleuthkit"
+  },
+  {
+    "slug": "grr",
+    "name": "GRR Rapid Response",
+    "position": "DFIR",
+    "provider": "github_repo",
+    "key": "google/grr",
+    "source_url": "https://github.com/google/grr"
+  },
+  {
+    "slug": "turbinia",
+    "name": "Turbinia",
+    "position": "DFIR",
+    "provider": "github_repo",
+    "key": "google/turbinia",
+    "source_url": "https://github.com/google/turbinia"
+  },
+  {
+    "slug": "dfvfs",
+    "name": "dfVFS",
+    "position": "DFIR",
+    "provider": "github_repo",
+    "key": "log2timeline/dfvfs",
+    "source_url": "https://github.com/log2timeline/dfvfs"
+  },
+  {
+    "slug": "dfwinreg",
+    "name": "dfWinReg",
+    "position": "DFIR",
+    "provider": "github_repo",
+    "key": "log2timeline/dfwinreg",
+    "source_url": "https://github.com/log2timeline/dfwinreg"
+  },
+  {
+    "slug": "dtformats",
+    "name": "dtFormats",
+    "position": "DFIR",
+    "provider": "github_repo",
+    "key": "log2timeline/dtformats",
+    "source_url": "https://github.com/log2timeline/dtformats"
+  },
+  {
+    "slug": "dfimagetools",
+    "name": "dfImageTools",
+    "position": "DFIR",
+    "provider": "github_repo",
+    "key": "log2timeline/dfimagetools",
+    "source_url": "https://github.com/log2timeline/dfimagetools"
+  },
+  {
+    "slug": "dftimewolf",
+    "name": "dftimewolf",
+    "position": "DFIR",
+    "provider": "github_repo",
+    "key": "log2timeline/dftimewolf",
+    "source_url": "https://github.com/log2timeline/dftimewolf"
+  },
+  {
+    "slug": "artifact-definitions",
+    "name": "Forensic Artifact Definitions",
+    "position": "DFIR",
+    "provider": "github_repo",
+    "key": "ForensicArtifacts/artifacts",
+    "source_url": "https://github.com/ForensicArtifacts/artifacts"
+  },
+  {
+    "slug": "libewf",
+    "name": "libewf",
+    "position": "DFIR",
+    "provider": "github_repo",
+    "key": "libyal/libewf",
+    "source_url": "https://github.com/libyal/libewf"
+  },
+  {
+    "slug": "libevtx",
+    "name": "libevtx",
+    "position": "DFIR",
+    "provider": "github_repo",
+    "key": "libyal/libevtx",
+    "source_url": "https://github.com/libyal/libevtx"
+  },
+  {
+    "slug": "libregf",
+    "name": "libregf",
+    "position": "DFIR",
+    "provider": "github_repo",
+    "key": "libyal/libregf",
+    "source_url": "https://github.com/libyal/libregf"
+  },
+  {
+    "slug": "libfsntfs",
+    "name": "libfsntfs",
+    "position": "DFIR",
+    "provider": "github_repo",
+    "key": "libyal/libfsntfs",
+    "source_url": "https://github.com/libyal/libfsntfs"
+  },
+  {
+    "slug": "libvshadow",
+    "name": "libvshadow",
+    "position": "DFIR",
+    "provider": "github_repo",
+    "key": "libyal/libvshadow",
+    "source_url": "https://github.com/libyal/libvshadow"
+  },
+  {
+    "slug": "libfsapfs",
+    "name": "libfsapfs",
+    "position": "DFIR",
+    "provider": "github_repo",
+    "key": "libyal/libfsapfs",
+    "source_url": "https://github.com/libyal/libfsapfs"
+  },
+  {
+    "slug": "libvhdi",
+    "name": "libvhdi",
+    "position": "DFIR",
+    "provider": "github_repo",
+    "key": "libyal/libvhdi",
+    "source_url": "https://github.com/libyal/libvhdi"
+  },
+  {
+    "slug": "libqcow",
+    "name": "libqcow",
+    "position": "DFIR",
+    "provider": "github_repo",
+    "key": "libyal/libqcow",
+    "source_url": "https://github.com/libyal/libqcow"
+  },
+  {
+    "slug": "flare-floss",
+    "name": "FLOSS Malware String Decoder",
+    "position": "DFIR",
+    "provider": "github_repo",
+    "key": "mandiant/flare-floss",
+    "source_url": "https://github.com/mandiant/flare-floss"
+  },
+  {
+    "slug": "capa",
+    "name": "capa Malware Capability Analyzer",
+    "position": "DFIR",
+    "provider": "github_repo",
+    "key": "mandiant/capa",
+    "source_url": "https://github.com/mandiant/capa"
+  },
+  {
+    "slug": "goresym",
+    "name": "GoReSym",
+    "position": "DFIR",
+    "provider": "github_repo",
+    "key": "mandiant/GoReSym",
+    "source_url": "https://github.com/mandiant/GoReSym"
+  },
+  {
+    "slug": "avml",
+    "name": "Azure VM Memory Dump",
+    "position": "DFIR",
+    "provider": "github_repo",
+    "key": "microsoft/avml",
+    "source_url": "https://github.com/microsoft/avml"
+  },
+  {
+    "slug": "lime",
+    "name": "LiME Memory Extractor",
+    "position": "DFIR",
+    "provider": "github_repo",
+    "key": "504ensicsLabs/LiME",
+    "source_url": "https://github.com/504ensicsLabs/LiME"
+  },
+  {
+    "slug": "cyberchef",
+    "name": "CyberChef",
+    "position": "DFIR",
+    "provider": "github_repo",
+    "key": "gchq/CyberChef",
+    "source_url": "https://github.com/gchq/CyberChef"
+  },
+  {
+    "slug": "phishing",
+    "name": "Phishing",
+    "position": "SOCIAL",
+    "provider": "gdelt",
+    "key": "(\"phishing attack\" OR \"phishing campaign\")",
+    "source_url": "https://www.gdeltproject.org/"
+  },
+  {
+    "slug": "smishing",
+    "name": "SMS Phishing",
+    "position": "SOCIAL",
+    "provider": "gdelt",
+    "key": "(\"smishing\" OR \"SMS phishing\")",
+    "source_url": "https://www.gdeltproject.org/"
+  },
+  {
+    "slug": "vishing",
+    "name": "Voice Phishing",
+    "position": "SOCIAL",
+    "provider": "gdelt",
+    "key": "(\"vishing\" OR \"voice phishing\")",
+    "source_url": "https://www.gdeltproject.org/"
+  },
+  {
+    "slug": "bec",
+    "name": "Business Email Compromise",
+    "position": "SOCIAL",
+    "provider": "gdelt",
+    "key": "(\"business email compromise\" OR \"BEC scam\")",
+    "source_url": "https://www.gdeltproject.org/"
+  },
+  {
+    "slug": "quishing",
+    "name": "QR Code Phishing",
+    "position": "SOCIAL",
+    "provider": "gdelt",
+    "key": "(\"QR code phishing\" OR \"quishing\")",
+    "source_url": "https://www.gdeltproject.org/"
+  },
+  {
+    "slug": "mfa-fatigue",
+    "name": "MFA Fatigue",
+    "position": "SOCIAL",
+    "provider": "gdelt",
+    "key": "(\"MFA fatigue\" OR \"push bombing\")",
+    "source_url": "https://www.gdeltproject.org/"
+  },
+  {
+    "slug": "deepfake-scams",
+    "name": "Deepfake Impersonation",
+    "position": "SOCIAL",
+    "provider": "gdelt",
+    "key": "(\"deepfake scam\" OR \"deepfake fraud\")",
+    "source_url": "https://www.gdeltproject.org/"
+  },
+  {
+    "slug": "credential-theft",
+    "name": "Credential Harvesting",
+    "position": "SOCIAL",
+    "provider": "gdelt",
+    "key": "(\"credential phishing\" OR \"credential harvesting\")",
+    "source_url": "https://www.gdeltproject.org/"
+  },
+  {
+    "slug": "tech-support",
+    "name": "Tech Support Scams",
+    "position": "SOCIAL",
+    "provider": "gdelt",
+    "key": "(\"tech support scam\" OR \"technical support fraud\")",
+    "source_url": "https://www.gdeltproject.org/"
+  },
+  {
+    "slug": "romance-scams",
+    "name": "Romance Scams",
+    "position": "SOCIAL",
+    "provider": "gdelt",
+    "key": "(\"romance scam\" OR \"romance fraud\")",
+    "source_url": "https://www.gdeltproject.org/"
+  },
+  {
+    "slug": "spear-phishing",
+    "name": "Spear Phishing",
+    "position": "SOCIAL",
+    "provider": "gdelt",
+    "key": "(\"spear phishing\" OR \"targeted phishing\")",
+    "source_url": "https://www.gdeltproject.org/"
+  },
+  {
+    "slug": "whaling-attacks",
+    "name": "Executive Whaling",
+    "position": "SOCIAL",
+    "provider": "gdelt",
+    "key": "(\"whaling phishing\" OR \"executive phishing\")",
+    "source_url": "https://www.gdeltproject.org/"
+  },
+  {
+    "slug": "phishing-kits",
+    "name": "Phishing Kits",
+    "position": "SOCIAL",
+    "provider": "gdelt",
+    "key": "(\"phishing kit\" OR \"phishing as a service\")",
+    "source_url": "https://www.gdeltproject.org/"
+  },
+  {
+    "slug": "callback-phishing",
+    "name": "Callback Phishing",
+    "position": "SOCIAL",
+    "provider": "gdelt",
+    "key": "(\"callback phishing\" OR \"TOAD phishing\")",
+    "source_url": "https://www.gdeltproject.org/"
+  },
+  {
+    "slug": "oauth-phishing",
+    "name": "OAuth Consent Phishing",
+    "position": "SOCIAL",
+    "provider": "gdelt",
+    "key": "(\"OAuth consent phishing\" OR \"OAuth phishing\")",
+    "source_url": "https://www.gdeltproject.org/"
+  },
+  {
+    "slug": "device-code-phishing",
+    "name": "Device Code Phishing",
+    "position": "SOCIAL",
+    "provider": "gdelt",
+    "key": "(\"device code phishing\" OR \"device code scam\")",
+    "source_url": "https://www.gdeltproject.org/"
+  },
+  {
+    "slug": "sim-swap",
+    "name": "SIM Swapping",
+    "position": "SOCIAL",
+    "provider": "gdelt",
+    "key": "(\"SIM swap fraud\" OR \"SIM swapping attack\")",
+    "source_url": "https://www.gdeltproject.org/"
+  },
+  {
+    "slug": "otp-scams",
+    "name": "One-Time Passcode Scams",
+    "position": "SOCIAL",
+    "provider": "gdelt",
+    "key": "(\"OTP scam\" OR \"one time password phishing\")",
+    "source_url": "https://www.gdeltproject.org/"
+  },
+  {
+    "slug": "job-scams",
+    "name": "Fake Job Recruitment",
+    "position": "SOCIAL",
+    "provider": "gdelt",
+    "key": "(\"fake job offer\" OR \"recruitment scam\")",
+    "source_url": "https://www.gdeltproject.org/"
+  },
+  {
+    "slug": "fake-captcha",
+    "name": "Fake CAPTCHA Attacks",
+    "position": "SOCIAL",
+    "provider": "gdelt",
+    "key": "(\"fake CAPTCHA\" OR \"ClickFix attack\")",
+    "source_url": "https://www.gdeltproject.org/"
+  },
+  {
+    "slug": "fake-browser-update",
+    "name": "Fake Browser Updates",
+    "position": "SOCIAL",
+    "provider": "gdelt",
+    "key": "(\"fake browser update\" OR \"browser update scam\")",
+    "source_url": "https://www.gdeltproject.org/"
+  },
+  {
+    "slug": "malvertising",
+    "name": "Malvertising",
+    "position": "SOCIAL",
+    "provider": "gdelt",
+    "key": "(\"malvertising\" OR \"malicious advertisements\")",
+    "source_url": "https://www.gdeltproject.org/"
+  },
+  {
+    "slug": "typosquatting",
+    "name": "Typosquatting",
+    "position": "SOCIAL",
+    "provider": "gdelt",
+    "key": "(\"typosquatting attack\" OR \"typosquatting campaign\")",
+    "source_url": "https://www.gdeltproject.org/"
+  },
+  {
+    "slug": "domain-spoofing",
+    "name": "Domain Spoofing",
+    "position": "SOCIAL",
+    "provider": "gdelt",
+    "key": "(\"email domain spoofing\" OR \"domain impersonation\")",
+    "source_url": "https://www.gdeltproject.org/"
+  },
+  {
+    "slug": "brand-impersonation",
+    "name": "Brand Impersonation",
+    "position": "SOCIAL",
+    "provider": "gdelt",
+    "key": "(\"brand impersonation\" OR \"impersonation phishing\")",
+    "source_url": "https://www.gdeltproject.org/"
+  },
+  {
+    "slug": "ceo-fraud",
+    "name": "CEO Fraud",
+    "position": "SOCIAL",
+    "provider": "gdelt",
+    "key": "(\"CEO fraud\" OR \"executive impersonation scam\")",
+    "source_url": "https://www.gdeltproject.org/"
+  },
+  {
+    "slug": "invoice-scams",
+    "name": "Invoice Fraud",
+    "position": "SOCIAL",
+    "provider": "gdelt",
+    "key": "(\"invoice fraud\" OR \"invoice phishing\")",
+    "source_url": "https://www.gdeltproject.org/"
+  },
+  {
+    "slug": "gift-card-scams",
+    "name": "Gift Card Scams",
+    "position": "SOCIAL",
+    "provider": "gdelt",
+    "key": "(\"gift card scam\" OR \"gift card fraud\")",
+    "source_url": "https://www.gdeltproject.org/"
+  },
+  {
+    "slug": "pig-butchering",
+    "name": "Pig Butchering Fraud",
+    "position": "SOCIAL",
+    "provider": "gdelt",
+    "key": "(\"pig butchering scam\" OR \"pig butchering fraud\")",
+    "source_url": "https://www.gdeltproject.org/"
+  },
+  {
+    "slug": "voice-cloning",
+    "name": "AI Voice Cloning Scams",
+    "position": "SOCIAL",
+    "provider": "gdelt",
+    "key": "(\"voice cloning scam\" OR \"AI voice impersonation\")",
+    "source_url": "https://www.gdeltproject.org/"
+  },
+  {
+    "slug": "social-account-takeover",
+    "name": "Social Account Takeover",
+    "position": "SOCIAL",
+    "provider": "gdelt",
+    "key": "(\"social media account takeover\" OR \"social account hijacking\")",
+    "source_url": "https://www.gdeltproject.org/"
+  },
+  {
+    "slug": "social-media-phishing",
+    "name": "Social Media Phishing",
+    "position": "SOCIAL",
+    "provider": "gdelt",
+    "key": "(\"social media phishing\" OR \"Instagram phishing\")",
+    "source_url": "https://www.gdeltproject.org/"
+  },
+  {
+    "slug": "fake-support-chat",
+    "name": "Fake Support Chat",
+    "position": "SOCIAL",
+    "provider": "gdelt",
+    "key": "(\"fake customer support\" OR \"fake support chat scam\")",
+    "source_url": "https://www.gdeltproject.org/"
+  },
+  {
+    "slug": "charity-scams",
+    "name": "Charity Impersonation Scams",
+    "position": "SOCIAL",
+    "provider": "gdelt",
+    "key": "(\"fake charity scam\" OR \"charity impersonation fraud\")",
+    "source_url": "https://www.gdeltproject.org/"
+  },
+  {
+    "slug": "delivery-scams",
+    "name": "Delivery Notification Scams",
+    "position": "SOCIAL",
+    "provider": "gdelt",
+    "key": "(\"package delivery scam\" OR \"parcel delivery phishing\")",
+    "source_url": "https://www.gdeltproject.org/"
+  },
+  {
+    "slug": "tax-scams",
+    "name": "Tax Agency Impersonation",
+    "position": "SOCIAL",
+    "provider": "gdelt",
+    "key": "(\"IRS impersonation scam\" OR \"tax authority phishing\")",
+    "source_url": "https://www.gdeltproject.org/"
+  },
+  {
+    "slug": "sigma",
+    "name": "Sigma Rules",
+    "position": "SOC",
+    "provider": "github_repo",
+    "key": "SigmaHQ/sigma",
+    "source_url": "https://github.com/SigmaHQ/sigma"
+  },
+  {
+    "slug": "elastic-detections",
+    "name": "Elastic Detection Rules",
+    "position": "SOC",
+    "provider": "github_repo",
+    "key": "elastic/detection-rules",
+    "source_url": "https://github.com/elastic/detection-rules"
+  },
+  {
+    "slug": "wazuh",
+    "name": "Wazuh",
+    "position": "SOC",
+    "provider": "github_repo",
+    "key": "wazuh/wazuh",
+    "source_url": "https://github.com/wazuh/wazuh"
+  },
+  {
+    "slug": "splunk-security",
+    "name": "Splunk Security Content",
+    "position": "SOC",
+    "provider": "github_repo",
+    "key": "splunk/security_content",
+    "source_url": "https://github.com/splunk/security_content"
+  },
+  {
+    "slug": "suricata",
+    "name": "Suricata",
+    "position": "SOC",
+    "provider": "github_repo",
+    "key": "OISF/suricata",
+    "source_url": "https://github.com/OISF/suricata"
+  },
+  {
+    "slug": "zeek",
+    "name": "Zeek",
+    "position": "SOC",
+    "provider": "github_repo",
+    "key": "zeek/zeek",
+    "source_url": "https://github.com/zeek/zeek"
+  },
+  {
+    "slug": "crowdsec",
+    "name": "CrowdSec",
+    "position": "SOC",
+    "provider": "github_repo",
+    "key": "crowdsecurity/crowdsec",
+    "source_url": "https://github.com/crowdsecurity/crowdsec"
+  },
+  {
+    "slug": "yara",
+    "name": "YARA",
+    "position": "SOC",
+    "provider": "github_repo",
+    "key": "VirusTotal/yara",
+    "source_url": "https://github.com/VirusTotal/yara"
+  },
+  {
+    "slug": "falco",
+    "name": "Falco",
+    "position": "SOC",
+    "provider": "github_repo",
+    "key": "falcosecurity/falco",
+    "source_url": "https://github.com/falcosecurity/falco"
+  },
+  {
+    "slug": "security-onion",
+    "name": "Security Onion",
+    "position": "SOC",
+    "provider": "github_repo",
+    "key": "Security-Onion-Solutions/securityonion",
+    "source_url": "https://github.com/Security-Onion-Solutions/securityonion"
+  },
+  {
+    "slug": "sigma-cli",
+    "name": "Sigma CLI",
+    "position": "SOC",
+    "provider": "github_repo",
+    "key": "SigmaHQ/sigma-cli",
+    "source_url": "https://github.com/SigmaHQ/sigma-cli"
+  },
+  {
+    "slug": "pysigma",
+    "name": "pySigma",
+    "position": "SOC",
+    "provider": "github_repo",
+    "key": "SigmaHQ/pySigma",
+    "source_url": "https://github.com/SigmaHQ/pySigma"
+  },
+  {
+    "slug": "pysigma-splunk",
+    "name": "pySigma Splunk Backend",
+    "position": "SOC",
+    "provider": "github_repo",
+    "key": "SigmaHQ/pySigma-backend-splunk",
+    "source_url": "https://github.com/SigmaHQ/pySigma-backend-splunk"
+  },
+  {
+    "slug": "pysigma-elastic",
+    "name": "pySigma Elasticsearch Backend",
+    "position": "SOC",
+    "provider": "github_repo",
+    "key": "SigmaHQ/pySigma-backend-elasticsearch",
+    "source_url": "https://github.com/SigmaHQ/pySigma-backend-elasticsearch"
+  },
+  {
+    "slug": "suricata-update",
+    "name": "suricata-update",
+    "position": "SOC",
+    "provider": "github_repo",
+    "key": "OISF/suricata-update",
+    "source_url": "https://github.com/OISF/suricata-update"
+  },
+  {
+    "slug": "zeek-packages",
+    "name": "Zeek Packages",
+    "position": "SOC",
+    "provider": "github_repo",
+    "key": "zeek/packages",
+    "source_url": "https://github.com/zeek/packages"
+  },
+  {
+    "slug": "fleet",
+    "name": "Fleet Endpoint Management",
+    "position": "SOC",
+    "provider": "github_repo",
+    "key": "fleetdm/fleet",
+    "source_url": "https://github.com/fleetdm/fleet"
+  },
+  {
+    "slug": "ossec",
+    "name": "OSSEC HIDS",
+    "position": "SOC",
+    "provider": "github_repo",
+    "key": "ossec/ossec-hids",
+    "source_url": "https://github.com/ossec/ossec-hids"
+  },
+  {
+    "slug": "snort3",
+    "name": "Snort 3",
+    "position": "SOC",
+    "provider": "github_repo",
+    "key": "snort3/snort3",
+    "source_url": "https://github.com/snort3/snort3"
+  },
+  {
+    "slug": "snort-daq",
+    "name": "Snort LibDAQ",
+    "position": "SOC",
+    "provider": "github_repo",
+    "key": "snort3/libdaq",
+    "source_url": "https://github.com/snort3/libdaq"
+  },
+  {
+    "slug": "falco-rules",
+    "name": "Falco Rules",
+    "position": "SOC",
+    "provider": "github_repo",
+    "key": "falcosecurity/rules",
+    "source_url": "https://github.com/falcosecurity/rules"
+  },
+  {
+    "slug": "falco-plugins",
+    "name": "Falco Plugins",
+    "position": "SOC",
+    "provider": "github_repo",
+    "key": "falcosecurity/plugins",
+    "source_url": "https://github.com/falcosecurity/plugins"
+  },
+  {
+    "slug": "tetragon",
+    "name": "Tetragon",
+    "position": "SOC",
+    "provider": "github_repo",
+    "key": "cilium/tetragon",
+    "source_url": "https://github.com/cilium/tetragon"
+  },
+  {
+    "slug": "cilium",
+    "name": "Cilium",
+    "position": "SOC",
+    "provider": "github_repo",
+    "key": "cilium/cilium",
+    "source_url": "https://github.com/cilium/cilium"
+  },
+  {
+    "slug": "yara-x",
+    "name": "YARA-X",
+    "position": "SOC",
+    "provider": "github_repo",
+    "key": "VirusTotal/yara-x",
+    "source_url": "https://github.com/VirusTotal/yara-x"
+  },
+  {
+    "slug": "sentinel",
+    "name": "Microsoft Sentinel Content",
+    "position": "SOC",
+    "provider": "github_repo",
+    "key": "Azure/Azure-Sentinel",
+    "source_url": "https://github.com/Azure/Azure-Sentinel"
+  },
+  {
+    "slug": "defender-hunting",
+    "name": "Defender Hunting Queries",
+    "position": "SOC",
+    "provider": "github_repo",
+    "key": "microsoft/Microsoft-365-Defender-Hunting-Queries",
+    "source_url": "https://github.com/microsoft/Microsoft-365-Defender-Hunting-Queries"
+  },
+  {
+    "slug": "loki-scanner",
+    "name": "LOKI IOC Scanner",
+    "position": "SOC",
+    "provider": "github_repo",
+    "key": "Neo23x0/Loki",
+    "source_url": "https://github.com/Neo23x0/Loki"
+  },
+  {
+    "slug": "signature-base",
+    "name": "THOR Signature Base",
+    "position": "SOC",
+    "provider": "github_repo",
+    "key": "Neo23x0/signature-base",
+    "source_url": "https://github.com/Neo23x0/signature-base"
+  },
+  {
+    "slug": "opensearch-security",
+    "name": "OpenSearch Security Analytics",
+    "position": "SOC",
+    "provider": "github_repo",
+    "key": "opensearch-project/security-analytics",
+    "source_url": "https://github.com/opensearch-project/security-analytics"
+  },
+  {
+    "slug": "opencti",
+    "name": "OpenCTI",
+    "position": "SOC",
+    "provider": "github_repo",
+    "key": "OpenCTI-Platform/opencti",
+    "source_url": "https://github.com/OpenCTI-Platform/opencti"
+  },
+  {
+    "slug": "cortex-analyzers",
+    "name": "Cortex Analyzers",
+    "position": "SOC",
+    "provider": "github_repo",
+    "key": "TheHive-Project/Cortex-Analyzers",
+    "source_url": "https://github.com/TheHive-Project/Cortex-Analyzers"
+  },
+  {
+    "slug": "thehive-cortex",
+    "name": "Cortex Threat Intel",
+    "position": "SOC",
+    "provider": "github_repo",
+    "key": "TheHive-Project/Cortex",
+    "source_url": "https://github.com/TheHive-Project/Cortex"
+  },
+  {
+    "slug": "velociraptor-sigma",
+    "name": "Sigma Correlation Rules",
+    "position": "SOC",
+    "provider": "github_repo",
+    "key": "SigmaHQ/sigma-specification",
+    "source_url": "https://github.com/SigmaHQ/sigma-specification"
+  },
+  {
+    "slug": "microsoft-kev",
+    "name": "Microsoft (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "Microsoft",
+    "aliases": [
+      "Microsoft"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "cisco-kev",
+    "name": "Cisco (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "Cisco",
+    "aliases": [
+      "Cisco"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "google-kev",
+    "name": "Google (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "Google",
+    "aliases": [
+      "Google"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "apple-kev",
+    "name": "Apple (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "Apple",
+    "aliases": [
+      "Apple"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "adobe-kev",
+    "name": "Adobe (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "Adobe",
+    "aliases": [
+      "Adobe"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "fortinet-kev",
+    "name": "Fortinet (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "Fortinet",
+    "aliases": [
+      "Fortinet"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "ivanti-kev",
+    "name": "Ivanti (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "Ivanti",
+    "aliases": [
+      "Ivanti"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "vmware-kev",
+    "name": "VMware (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "VMware",
+    "aliases": [
+      "VMware"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "atlassian-kev",
+    "name": "Atlassian (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "Atlassian",
+    "aliases": [
+      "Atlassian"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "oracle-kev",
+    "name": "Oracle (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "Oracle",
+    "aliases": [
+      "Oracle"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "juniper-kev",
+    "name": "Juniper (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "Juniper",
+    "aliases": [
+      "Juniper"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "paloalto-kev",
+    "name": "Palo Alto Networks (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "Palo Alto Networks",
+    "aliases": [
+      "Palo Alto Networks"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "sophos-kev",
+    "name": "Sophos (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "Sophos",
+    "aliases": [
+      "Sophos"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "checkpoint-kev",
+    "name": "Check Point (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "Check Point",
+    "aliases": [
+      "Check Point"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "citrix-kev",
+    "name": "Citrix (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "Citrix",
+    "aliases": [
+      "Citrix"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "f5-kev",
+    "name": "F5 (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "F5",
+    "aliases": [
+      "F5"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "dlink-kev",
+    "name": "D-Link (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "D-Link",
+    "aliases": [
+      "D-Link"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "zyxel-kev",
+    "name": "Zyxel (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "Zyxel",
+    "aliases": [
+      "Zyxel"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "sonicwall-kev",
+    "name": "SonicWall (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "SonicWall",
+    "aliases": [
+      "SonicWall"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "sap-kev",
+    "name": "SAP (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "SAP",
+    "aliases": [
+      "SAP"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "apache-kev",
+    "name": "Apache (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "Apache",
+    "aliases": [
+      "Apache",
+      "Apache Software Foundation"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "jenkins-kev",
+    "name": "Jenkins (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "Jenkins",
+    "aliases": [
+      "Jenkins"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "linux-kev",
+    "name": "Linux (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "Linux",
+    "aliases": [
+      "Linux"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "mozilla-kev",
+    "name": "Mozilla (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "Mozilla",
+    "aliases": [
+      "Mozilla"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "tplink-kev",
+    "name": "TP-Link (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "TP-Link",
+    "aliases": [
+      "TP-Link"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "netgear-kev",
+    "name": "NETGEAR (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "NETGEAR",
+    "aliases": [
+      "NETGEAR"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "samsung-kev",
+    "name": "Samsung (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "Samsung",
+    "aliases": [
+      "Samsung"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "ibm-kev",
+    "name": "IBM (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "IBM",
+    "aliases": [
+      "IBM"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "dell-kev",
+    "name": "Dell (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "Dell",
+    "aliases": [
+      "Dell"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "hp-kev",
+    "name": "HP (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "HP",
+    "aliases": [
+      "HP"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "hpe-kev",
+    "name": "HPE (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "Hewlett Packard Enterprise",
+    "aliases": [
+      "Hewlett Packard Enterprise",
+      "HPE"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "progress-kev",
+    "name": "Progress (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "Progress",
+    "aliases": [
+      "Progress"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "veeam-kev",
+    "name": "Veeam (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "Veeam",
+    "aliases": [
+      "Veeam"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "solarwinds-kev",
+    "name": "SolarWinds (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "SolarWinds",
+    "aliases": [
+      "SolarWinds"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "zoho-kev",
+    "name": "Zoho (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "Zoho",
+    "aliases": [
+      "Zoho"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "gitlab-kev",
+    "name": "GitLab (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "GitLab",
+    "aliases": [
+      "GitLab"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "trendmicro-kev",
+    "name": "Trend Micro (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "Trend Micro",
+    "aliases": [
+      "Trend Micro"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "mikrotik-kev",
+    "name": "MikroTik (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "MikroTik",
+    "aliases": [
+      "MikroTik"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "connectwise-kev",
+    "name": "ConnectWise (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "ConnectWise",
+    "aliases": [
+      "ConnectWise"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "pulse-kev",
+    "name": "Pulse Secure (KEV)",
+    "position": "VULN",
+    "provider": "cisa",
+    "key": "Pulse Secure",
+    "aliases": [
+      "Pulse Secure"
+    ],
+    "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  },
+  {
+    "slug": "stock-aapl",
+    "name": "Apple · AAPL",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "AAPL",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/aapl"
+  },
+  {
+    "slug": "stock-msft",
+    "name": "Microsoft · MSFT",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "MSFT",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/msft"
+  },
+  {
+    "slug": "stock-googl",
+    "name": "Alphabet · GOOGL",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "GOOGL",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/googl"
+  },
+  {
+    "slug": "stock-nvda",
+    "name": "NVIDIA · NVDA",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "NVDA",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/nvda"
+  },
+  {
+    "slug": "stock-amzn",
+    "name": "Amazon · AMZN",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "AMZN",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/amzn"
+  },
+  {
+    "slug": "stock-meta",
+    "name": "Meta · META",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "META",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/meta"
+  },
+  {
+    "slug": "stock-amd",
+    "name": "AMD · AMD",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "AMD",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/amd"
+  },
+  {
+    "slug": "stock-intc",
+    "name": "Intel · INTC",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "INTC",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/intc"
+  },
+  {
+    "slug": "stock-orcl",
+    "name": "Oracle · ORCL",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "ORCL",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/orcl"
+  },
+  {
+    "slug": "stock-csco",
+    "name": "Cisco · CSCO",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "CSCO",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/csco"
+  },
+  {
+    "slug": "stock-adbe",
+    "name": "Adobe · ADBE",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "ADBE",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/adbe"
+  },
+  {
+    "slug": "stock-crm",
+    "name": "Salesforce · CRM",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "CRM",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/crm"
+  },
+  {
+    "slug": "stock-ibm",
+    "name": "IBM · IBM",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "IBM",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/ibm"
+  },
+  {
+    "slug": "stock-avgo",
+    "name": "Broadcom · AVGO",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "AVGO",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/avgo"
+  },
+  {
+    "slug": "stock-now",
+    "name": "ServiceNow · NOW",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "NOW",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/now"
+  },
+  {
+    "slug": "stock-crwd",
+    "name": "CrowdStrike · CRWD",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "CRWD",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/crwd"
+  },
+  {
+    "slug": "stock-panw",
+    "name": "Palo Alto Networks · PANW",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "PANW",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/panw"
+  },
+  {
+    "slug": "stock-ftnt",
+    "name": "Fortinet · FTNT",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "FTNT",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/ftnt"
+  },
+  {
+    "slug": "stock-zs",
+    "name": "Zscaler · ZS",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "ZS",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/zs"
+  },
+  {
+    "slug": "stock-net",
+    "name": "Cloudflare · NET",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "NET",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/net"
+  },
+  {
+    "slug": "stock-okta",
+    "name": "Okta · OKTA",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "OKTA",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/okta"
+  },
+  {
+    "slug": "stock-ddog",
+    "name": "Datadog · DDOG",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "DDOG",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/ddog"
+  },
+  {
+    "slug": "stock-snow",
+    "name": "Snowflake · SNOW",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "SNOW",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/snow"
+  },
+  {
+    "slug": "stock-pltr",
+    "name": "Palantir · PLTR",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "PLTR",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/pltr"
+  },
+  {
+    "slug": "stock-tsla",
+    "name": "Tesla · TSLA",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "TSLA",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/tsla"
+  },
+  {
+    "slug": "stock-nflx",
+    "name": "Netflix · NFLX",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "NFLX",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/nflx"
+  },
+  {
+    "slug": "stock-shop",
+    "name": "Shopify · SHOP",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "SHOP",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/shop"
+  },
+  {
+    "slug": "stock-uber",
+    "name": "Uber · UBER",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "UBER",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/uber"
+  },
+  {
+    "slug": "stock-abnb",
+    "name": "Airbnb · ABNB",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "ABNB",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/abnb"
+  },
+  {
+    "slug": "stock-dell",
+    "name": "Dell Technologies · DELL",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "DELL",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/dell"
+  },
+  {
+    "slug": "stock-hpq",
+    "name": "HP Inc. · HPQ",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "HPQ",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/hpq"
+  },
+  {
+    "slug": "stock-hpe",
+    "name": "Hewlett Packard Enterprise · HPE",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "HPE",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/hpe"
+  },
+  {
+    "slug": "stock-mu",
+    "name": "Micron · MU",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "MU",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/mu"
+  },
+  {
+    "slug": "stock-qcom",
+    "name": "Qualcomm · QCOM",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "QCOM",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/qcom"
+  },
+  {
+    "slug": "stock-tsm",
+    "name": "TSMC · TSM",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "TSM",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/tsm"
+  },
+  {
+    "slug": "stock-arm",
+    "name": "Arm · ARM",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "ARM",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/arm"
+  },
+  {
+    "slug": "stock-asml",
+    "name": "ASML · ASML",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "ASML",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/asml"
+  },
+  {
+    "slug": "stock-akam",
+    "name": "Akamai · AKAM",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "AKAM",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/akam"
+  },
+  {
+    "slug": "stock-mdb",
+    "name": "MongoDB · MDB",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "MDB",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/mdb"
+  },
+  {
+    "slug": "stock-estc",
+    "name": "Elastic · ESTC",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "ESTC",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/estc"
+  },
+  {
+    "slug": "stock-gtlb",
+    "name": "GitLab · GTLB",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "GTLB",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/gtlb"
+  },
+  {
+    "slug": "stock-team",
+    "name": "Atlassian · TEAM",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "TEAM",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/team"
+  },
+  {
+    "slug": "stock-s",
+    "name": "SentinelOne · S",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "S",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/s"
+  },
+  {
+    "slug": "stock-tenb",
+    "name": "Tenable · TENB",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "TENB",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/tenb"
+  },
+  {
+    "slug": "stock-qlys",
+    "name": "Qualys · QLYS",
+    "position": "DEF",
+    "provider": "twelvedata",
+    "key": "QLYS",
+    "source_url": "https://www.nasdaq.com/market-activity/stocks/qlys"
+  },
+  {
+    "slug": "lang-python",
+    "name": "Python",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "Python",
+    "source_url": "https://github.com/search?q=language%3APython"
+  },
+  {
+    "slug": "lang-javascript",
+    "name": "JavaScript",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "JavaScript",
+    "source_url": "https://github.com/search?q=language%3AJavaScript"
+  },
+  {
+    "slug": "lang-typescript",
+    "name": "TypeScript",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "TypeScript",
+    "source_url": "https://github.com/search?q=language%3ATypeScript"
+  },
+  {
+    "slug": "lang-rust",
+    "name": "Rust",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "Rust",
+    "source_url": "https://github.com/search?q=language%3ARust"
+  },
+  {
+    "slug": "lang-go",
+    "name": "Go",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "Go",
+    "source_url": "https://github.com/search?q=language%3AGo"
+  },
+  {
+    "slug": "lang-java",
+    "name": "Java",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "Java",
+    "source_url": "https://github.com/search?q=language%3AJava"
+  },
+  {
+    "slug": "lang-cpp",
+    "name": "C++",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "C++",
+    "source_url": "https://github.com/search?q=language%3AC%2B%2B"
+  },
+  {
+    "slug": "lang-csharp",
+    "name": "C#",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "C#",
+    "source_url": "https://github.com/search?q=language%3AC%23"
+  },
+  {
+    "slug": "lang-kotlin",
+    "name": "Kotlin",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "Kotlin",
+    "source_url": "https://github.com/search?q=language%3AKotlin"
+  },
+  {
+    "slug": "lang-swift",
+    "name": "Swift",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "Swift",
+    "source_url": "https://github.com/search?q=language%3ASwift"
+  },
+  {
+    "slug": "lang-ruby",
+    "name": "Ruby",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "Ruby",
+    "source_url": "https://github.com/search?q=language%3ARuby"
+  },
+  {
+    "slug": "lang-php",
+    "name": "PHP",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "PHP",
+    "source_url": "https://github.com/search?q=language%3APHP"
+  },
+  {
+    "slug": "lang-zig",
+    "name": "Zig",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "Zig",
+    "source_url": "https://github.com/search?q=language%3AZig"
+  },
+  {
+    "slug": "lang-dart",
+    "name": "Dart",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "Dart",
+    "source_url": "https://github.com/search?q=language%3ADart"
+  },
+  {
+    "slug": "lang-c",
+    "name": "C",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "C",
+    "source_url": "https://github.com/search?q=language%3AC"
+  },
+  {
+    "slug": "lang-r",
+    "name": "R",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "R",
+    "source_url": "https://github.com/search?q=language%3AR"
+  },
+  {
+    "slug": "lang-shell",
+    "name": "Shell",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "Shell",
+    "source_url": "https://github.com/search?q=language%3AShell"
+  },
+  {
+    "slug": "lang-powershell",
+    "name": "PowerShell",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "PowerShell",
+    "source_url": "https://github.com/search?q=language%3APowerShell"
+  },
+  {
+    "slug": "lang-lua",
+    "name": "Lua",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "Lua",
+    "source_url": "https://github.com/search?q=language%3ALua"
+  },
+  {
+    "slug": "lang-haskell",
+    "name": "Haskell",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "Haskell",
+    "source_url": "https://github.com/search?q=language%3AHaskell"
+  },
+  {
+    "slug": "lang-elixir",
+    "name": "Elixir",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "Elixir",
+    "source_url": "https://github.com/search?q=language%3AElixir"
+  },
+  {
+    "slug": "lang-erlang",
+    "name": "Erlang",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "Erlang",
+    "source_url": "https://github.com/search?q=language%3AErlang"
+  },
+  {
+    "slug": "lang-scala",
+    "name": "Scala",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "Scala",
+    "source_url": "https://github.com/search?q=language%3AScala"
+  },
+  {
+    "slug": "lang-ocaml",
+    "name": "OCaml",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "OCaml",
+    "source_url": "https://github.com/search?q=language%3AOCaml"
+  },
+  {
+    "slug": "lang-julia",
+    "name": "Julia",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "Julia",
+    "source_url": "https://github.com/search?q=language%3AJulia"
+  },
+  {
+    "slug": "lang-perl",
+    "name": "Perl",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "Perl",
+    "source_url": "https://github.com/search?q=language%3APerl"
+  },
+  {
+    "slug": "lang-objectivec",
+    "name": "Objective-C",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "Objective-C",
+    "source_url": "https://github.com/search?q=language%3AObjective-C"
+  },
+  {
+    "slug": "lang-groovy",
+    "name": "Groovy",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "Groovy",
+    "source_url": "https://github.com/search?q=language%3AGroovy"
+  },
+  {
+    "slug": "lang-clojure",
+    "name": "Clojure",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "Clojure",
+    "source_url": "https://github.com/search?q=language%3AClojure"
+  },
+  {
+    "slug": "lang-assembly",
+    "name": "Assembly",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "Assembly",
+    "source_url": "https://github.com/search?q=language%3AAssembly"
+  },
+  {
+    "slug": "lang-solidity",
+    "name": "Solidity",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "Solidity",
+    "source_url": "https://github.com/search?q=language%3ASolidity"
+  },
+  {
+    "slug": "lang-nix",
+    "name": "Nix",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "Nix",
+    "source_url": "https://github.com/search?q=language%3ANix"
+  },
+  {
+    "slug": "lang-fortran",
+    "name": "Fortran",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "Fortran",
+    "source_url": "https://github.com/search?q=language%3AFortran"
+  },
+  {
+    "slug": "lang-matlab",
+    "name": "MATLAB",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "MATLAB",
+    "source_url": "https://github.com/search?q=language%3AMATLAB"
+  },
+  {
+    "slug": "lang-fsharp",
+    "name": "F#",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "F#",
+    "source_url": "https://github.com/search?q=language%3AF%23"
+  },
+  {
+    "slug": "lang-nim",
+    "name": "Nim",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "Nim",
+    "source_url": "https://github.com/search?q=language%3ANim"
+  },
+  {
+    "slug": "lang-crystal",
+    "name": "Crystal",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "Crystal",
+    "source_url": "https://github.com/search?q=language%3ACrystal"
+  },
+  {
+    "slug": "lang-prolog",
+    "name": "Prolog",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "Prolog",
+    "source_url": "https://github.com/search?q=language%3AProlog"
+  },
+  {
+    "slug": "lang-elm",
+    "name": "Elm",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "Elm",
+    "source_url": "https://github.com/search?q=language%3AElm"
+  },
+  {
+    "slug": "lang-verilog",
+    "name": "Verilog",
+    "position": "LANG",
+    "provider": "github_language",
+    "key": "Verilog",
+    "source_url": "https://github.com/search?q=language%3AVerilog"
+  },
+  {
+    "slug": "llama",
+    "name": "Llama 3.3 70B",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "meta-llama/Llama-3.3-70B-Instruct",
+    "source_url": "https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct"
+  },
+  {
+    "slug": "deepseek-r1",
+    "name": "DeepSeek R1",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "deepseek-ai/DeepSeek-R1",
+    "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-R1"
+  },
+  {
+    "slug": "deepseek-v3",
+    "name": "DeepSeek V3",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "deepseek-ai/DeepSeek-V3",
+    "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V3"
+  },
+  {
+    "slug": "qwen3-8b",
+    "name": "Qwen3 8B",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "Qwen/Qwen3-8B",
+    "source_url": "https://huggingface.co/Qwen/Qwen3-8B"
+  },
+  {
+    "slug": "qwen3-32b",
+    "name": "Qwen3 32B",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "Qwen/Qwen3-32B",
+    "source_url": "https://huggingface.co/Qwen/Qwen3-32B"
+  },
+  {
+    "slug": "gemma3",
+    "name": "Gemma 3 27B",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "google/gemma-3-27b-it",
+    "source_url": "https://huggingface.co/google/gemma-3-27b-it"
+  },
+  {
+    "slug": "phi4",
+    "name": "Phi-4 Mini",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "microsoft/Phi-4-mini-instruct",
+    "source_url": "https://huggingface.co/microsoft/Phi-4-mini-instruct"
+  },
+  {
+    "slug": "mistral-small",
+    "name": "Mistral Small 3.1",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "mistralai/Mistral-Small-3.1-24B-Instruct-2503",
+    "source_url": "https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503"
+  },
+  {
+    "slug": "smollm2",
+    "name": "SmolLM2 1.7B",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "HuggingFaceTB/SmolLM2-1.7B-Instruct",
+    "source_url": "https://huggingface.co/HuggingFaceTB/SmolLM2-1.7B-Instruct"
+  },
+  {
+    "slug": "olmo2",
+    "name": "OLMo 2 7B",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "allenai/OLMo-2-1124-7B-Instruct",
+    "source_url": "https://huggingface.co/allenai/OLMo-2-1124-7B-Instruct"
+  },
+  {
+    "slug": "deepseek-distill8b",
+    "name": "DeepSeek R1 Distill Llama 8B",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
+    "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Llama-8B"
+  },
+  {
+    "slug": "deepseek-distill32b",
+    "name": "DeepSeek R1 Distill Qwen 32B",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
+    "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-32B"
+  },
+  {
+    "slug": "qwen3-4b",
+    "name": "Qwen3 4B",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "Qwen/Qwen3-4B",
+    "source_url": "https://huggingface.co/Qwen/Qwen3-4B"
+  },
+  {
+    "slug": "qwen3-14b",
+    "name": "Qwen3 14B",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "Qwen/Qwen3-14B",
+    "source_url": "https://huggingface.co/Qwen/Qwen3-14B"
+  },
+  {
+    "slug": "qwen25-7b",
+    "name": "Qwen 2.5 7B Instruct",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "Qwen/Qwen2.5-7B-Instruct",
+    "source_url": "https://huggingface.co/Qwen/Qwen2.5-7B-Instruct"
+  },
+  {
+    "slug": "qwen25-coder",
+    "name": "Qwen 2.5 Coder 7B",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "source_url": "https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct"
+  },
+  {
+    "slug": "qwen25-vl",
+    "name": "Qwen 2.5 VL 7B",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "Qwen/Qwen2.5-VL-7B-Instruct",
+    "source_url": "https://huggingface.co/Qwen/Qwen2.5-VL-7B-Instruct"
+  },
+  {
+    "slug": "gemma3-4b",
+    "name": "Gemma 3 4B",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "google/gemma-3-4b-it",
+    "source_url": "https://huggingface.co/google/gemma-3-4b-it"
+  },
+  {
+    "slug": "gemma3-12b",
+    "name": "Gemma 3 12B",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "google/gemma-3-12b-it",
+    "source_url": "https://huggingface.co/google/gemma-3-12b-it"
+  },
+  {
+    "slug": "gemma2-9b",
+    "name": "Gemma 2 9B",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "google/gemma-2-9b-it",
+    "source_url": "https://huggingface.co/google/gemma-2-9b-it"
+  },
+  {
+    "slug": "phi4-full",
+    "name": "Phi-4",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "microsoft/phi-4",
+    "source_url": "https://huggingface.co/microsoft/phi-4"
+  },
+  {
+    "slug": "phi3-mini",
+    "name": "Phi-3 Mini 4K",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "microsoft/Phi-3-mini-4k-instruct",
+    "source_url": "https://huggingface.co/microsoft/Phi-3-mini-4k-instruct"
+  },
+  {
+    "slug": "phi35-mini",
+    "name": "Phi-3.5 Mini",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "microsoft/Phi-3.5-mini-instruct",
+    "source_url": "https://huggingface.co/microsoft/Phi-3.5-mini-instruct"
+  },
+  {
+    "slug": "florence2",
+    "name": "Florence-2 Large",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "microsoft/Florence-2-large",
+    "source_url": "https://huggingface.co/microsoft/Florence-2-large"
+  },
+  {
+    "slug": "mistral7b",
+    "name": "Mistral 7B Instruct v0.3",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "mistralai/Mistral-7B-Instruct-v0.3",
+    "source_url": "https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.3"
+  },
+  {
+    "slug": "mixtral8x7b",
+    "name": "Mixtral 8x7B Instruct",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "mistralai/Mixtral-8x7B-Instruct-v0.1",
+    "source_url": "https://huggingface.co/mistralai/Mixtral-8x7B-Instruct-v0.1"
+  },
+  {
+    "slug": "mistral-nemo",
+    "name": "Mistral NeMo",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "mistralai/Mistral-Nemo-Instruct-2407",
+    "source_url": "https://huggingface.co/mistralai/Mistral-Nemo-Instruct-2407"
+  },
+  {
+    "slug": "smollm2-360m",
+    "name": "SmolLM2 360M",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "HuggingFaceTB/SmolLM2-360M-Instruct",
+    "source_url": "https://huggingface.co/HuggingFaceTB/SmolLM2-360M-Instruct"
+  },
+  {
+    "slug": "olmo2-32b",
+    "name": "OLMo 2 32B",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "allenai/OLMo-2-0325-32B-Instruct",
+    "source_url": "https://huggingface.co/allenai/OLMo-2-0325-32B-Instruct"
+  },
+  {
+    "slug": "yi15-34b",
+    "name": "Yi 1.5 34B",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "01-ai/Yi-1.5-34B-Chat",
+    "source_url": "https://huggingface.co/01-ai/Yi-1.5-34B-Chat"
+  },
+  {
+    "slug": "aya8b",
+    "name": "Aya Expanse 8B",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "CohereForAI/aya-expanse-8b",
+    "source_url": "https://huggingface.co/CohereForAI/aya-expanse-8b"
+  },
+  {
+    "slug": "aya32b",
+    "name": "Aya Expanse 32B",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "CohereForAI/aya-expanse-32b",
+    "source_url": "https://huggingface.co/CohereForAI/aya-expanse-32b"
+  },
+  {
+    "slug": "sdxl",
+    "name": "Stable Diffusion XL",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "stabilityai/stable-diffusion-xl-base-1.0",
+    "source_url": "https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0"
+  },
+  {
+    "slug": "flux-dev",
+    "name": "FLUX.1 Dev",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "black-forest-labs/FLUX.1-dev",
+    "source_url": "https://huggingface.co/black-forest-labs/FLUX.1-dev"
+  },
+  {
+    "slug": "flux-schnell",
+    "name": "FLUX.1 Schnell",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "black-forest-labs/FLUX.1-schnell",
+    "source_url": "https://huggingface.co/black-forest-labs/FLUX.1-schnell"
+  },
+  {
+    "slug": "whisper-large",
+    "name": "Whisper Large v3",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "openai/whisper-large-v3",
+    "source_url": "https://huggingface.co/openai/whisper-large-v3"
+  },
+  {
+    "slug": "sam-huge",
+    "name": "Segment Anything ViT-H",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "facebook/sam-vit-huge",
+    "source_url": "https://huggingface.co/facebook/sam-vit-huge"
+  },
+  {
+    "slug": "all-minilm",
+    "name": "all-MiniLM-L6-v2",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "sentence-transformers/all-MiniLM-L6-v2",
+    "source_url": "https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2"
+  },
+  {
+    "slug": "bloom",
+    "name": "BLOOM",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "bigscience/bloom",
+    "source_url": "https://huggingface.co/bigscience/bloom"
+  },
+  {
+    "slug": "sd35-large",
+    "name": "Stable Diffusion 3.5 Large",
+    "position": "AI",
+    "provider": "huggingface",
+    "key": "stabilityai/stable-diffusion-3.5-large",
+    "source_url": "https://huggingface.co/stabilityai/stable-diffusion-3.5-large"
+  }
+]
