@@ -41,10 +41,6 @@ Use the **Draft Pool** tab to browse before signing in. Filter by role, search b
 
 The Twelve Data code in `scripts/sync_events.py` is a **server-only adapter**; the public website contains no market-data key. Public distribution of stock-data-derived scores may require a **commercial display / derived-data license**, exchange permissions and attribution. Twelve Data's individual/free tiers are not a blanket license for public redistribution. Check your plan with the provider **before enabling `TWELVEDATA_API_KEY` in a publicly available game**. References: [Twelve Data commercial & personal usage](https://support.twelvedata.com/en/articles/5332349-commercial-and-personal-usage), [Twelve Data terms](https://twelvedata.com/terms). Weekly output stores and displays only a derived return percent and fantasy score, not the underlying raw prices, but this does not remove licensing obligations.
 
-## Optional: publish the website immediately without configuring multiplayer
-
-The `site/` folder can be dragged into [Netlify Drop](https://app.netlify.com/drop), or served by GitHub Pages. You will see the homepage, seven-position catalog, real-event display and rules, but **sign-in, draft, leagues, and live scoring won't work until the database and scheduled importer have been configured**. For Netlify, the provided `netlify.toml` sets `site/` as the publish directory; import jobs still require a separate scheduler such as GitHub Actions. The site also contains `/practice/`, the **legacy fictional single-player demo**; it is not the new category-based multiplayer game.
-
 ## Project contents
 
 ```
