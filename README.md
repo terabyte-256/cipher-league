@@ -37,24 +37,6 @@ Use the **Draft Pool** tab to browse before signing in. Filter by role, search b
 
 **Rate limits:** The expanded importer processes the current week daily and also rechecks the previous week on Monday–Wednesday UTC. To force previous-week backfill later, set `CIPHER_BACKFILL_PREVIOUS=1` for an importer run. Authenticated GitHub search requires `GH_TOKEN`; without a token, GitHub scoring is skipped. The workflow's timeout is extended to 50 minutes for 268 assets. Market-feed quota/licensing restrictions still apply; adding choices does not automatically make scores available.
 
-## Publish a true multiplayer league (recommended: GitHub Pages + Supabase)
-
-A static hosting URL alone is **not** multiplayer. Complete these steps in this order:
-
-1. Create a fresh [Supabase project](https://supabase.com/dashboard/projects). In **SQL Editor**, run `supabase/schema.sql`, then `supabase/seed.sql`. **For existing v2 databases:** this schema is for a *fresh install*. It is not an in-place migration; don't overwrite an existing live league.
-2. In Supabase **Authentication → Providers**, enable email sign-in. Under **Authentication → URL Configuration**, set your deployed **Site URL** and add the public website URL to the **Redirect URLs** allowlist. Configure production email sending/SMTP and OTP limits as appropriate.
-3. In `site/config.js`, set the Supabase **Project URL** and its **publishable/anon key**. Both are intended for client use. **NEVER paste your service role key into the website.**
-4. Push the *full source package* to a new GitHub repository on branch `main`. In **Settings → Pages**, set **Build and deployment → Source: GitHub Actions**. The existing `.github/workflows/pages.yml` publishes the `site/` directory.
-5. Under **Settings → Secrets and variables → Actions**, add:
-   - `SUPABASE_URL`: same project URL.
-   - `SUPABASE_SERVICE_ROLE_KEY`: server-only key, used by the daily import workflow.
-   - `CIPHER_GITHUB_TOKEN`: recommended GitHub token for public repository search (if omitted, GitHub Actions' built-in token is used).
-   - `TWELVEDATA_API_KEY`: optional **only when your Twelve Data contract permits public display of derived scores**. Otherwise stock results remain **pending** and weekly matchups cannot be finalized. See licensing notes below.
-6. Under **Actions**, run **Publish Cipher League and import verified signals → Run workflow** manually once. Check logs for the provider success/failure counts, and confirm `asset_week_scores` contains records in Supabase. The workflow subsequently runs daily at **13:17 UTC** and on pushes. Scheduled Actions can be delayed or skipped; monitor runs.
-7. Open the GitHub Pages URL, sign in by email, create a private league, and share its invite URL. At least two **different** accounts are needed. The commissioner starts the draft. Round sequence: **DFIR → SOCIAL → SOC → VULN → DEF → LANG → AI → any-category bench**, snake order every round.
-
-Official docs: [Supabase Auth redirect URLs](https://supabase.com/docs/guides/auth/redirect-urls), [Supabase RLS](https://supabase.com/docs/guides/database/postgres/row-level-security), [GitHub Pages Actions](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site).
-
 ### Stock-market data licensing
 
 The Twelve Data code in `scripts/sync_events.py` is a **server-only adapter**; the public website contains no market-data key. Public distribution of stock-data-derived scores may require a **commercial display / derived-data license**, exchange permissions and attribution. Twelve Data's individual/free tiers are not a blanket license for public redistribution. Check your plan with the provider **before enabling `TWELVEDATA_API_KEY` in a publicly available game**. References: [Twelve Data commercial & personal usage](https://support.twelvedata.com/en/articles/5332349-commercial-and-personal-usage), [Twelve Data terms](https://twelvedata.com/terms). Weekly output stores and displays only a derived return percent and fantasy score, not the underlying raw prices, but this does not remove licensing obligations.
@@ -62,35 +44,6 @@ The Twelve Data code in `scripts/sync_events.py` is a **server-only adapter**; t
 ## Optional: publish the website immediately without configuring multiplayer
 
 The `site/` folder can be dragged into [Netlify Drop](https://app.netlify.com/drop), or served by GitHub Pages. You will see the homepage, seven-position catalog, real-event display and rules, but **sign-in, draft, leagues, and live scoring won't work until the database and scheduled importer have been configured**. For Netlify, the provided `netlify.toml` sets `site/` as the publish directory; import jobs still require a separate scheduler such as GitHub Actions. The site also contains `/practice/`, the **legacy fictional single-player demo**; it is not the new category-based multiplayer game.
-
-## Develop locally
-
-```bash
-cd site
-python3 -m http.server 8080
-# open http://localhost:8080
-```
-
-For local multiplayer testing, authorize `http://localhost:8080` in Supabase's Auth Redirect URL list and populate `site/config.js` with the **public** key only. To run an importer manually with appropriately scoped *server-side* environment variables:
-
-```bash
-SUPABASE_URL='https://YOUR-PROJECT.supabase.co' \
-SUPABASE_SERVICE_ROLE_KEY='SECRET-KEEP-PRIVATE' \
-GH_TOKEN='YOUR_GITHUB_ACCESS_TOKEN' \
-python3 scripts/sync_events.py --source github
-```
-
-Valid sources: `all`, `cisa`, `github`, `social`, `ai`, `stock`. If provider auth/network fails, that score is **not** overwritten with fake data. The first AI snapshot is used as a baseline; unlike historical public feeds, **Hugging Face likes growth cannot be reconstructed retroactively without prior snapshots**. GDELT history is limited; request only recent weeks. A new deployment should ideally start collecting snapshots before the first scoring Monday.
-
-## Security model
-
-- RLS prevents authenticated users reading another league's members, picks or lineups. Public candidate and scoring feeds are read-only.
-- RPCs use league row locks and validate ownership, commissioner permissions, draft turns, required positions, and unique picks **inside PostgreSQL transactions**.
-- Browser clients cannot write scoring facts or retroactively edit past starting lineups. Only a trusted server-side service role imports observations and snapshots.
-- League standings count **completed weeks with all seven scoring positions present for every roster**. Otherwise that week remains *data pending*.
-- Supabase realtime change feeds synchronize league members, draft picks and lineups. A manual Refresh is also available.
-- Invitation codes are convenience join secrets, **not** a substitute for identity or authorization.
-- **Limitations:** no autopicks/draft timeouts, trading/waivers, realtime chat, auto playoffs, or fully licensed stock feed included. Reliability depends on external API access and scheduled job runs. External data may revise after collection.
 
 ## Project contents
 
