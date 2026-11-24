@@ -104,6 +104,12 @@ class ScoringTests(unittest.TestCase):
             got=[(a['slug'],score.iso(w)) for a,w in score.social_targets()]
         self.assertEqual(got,[('missing',prev),('missing',cur),('stale',prev),('stale',cur)])
 
+    def test_gdelt_empty_object_is_zero_but_other_shapes_are_not(self):
+        with patch.object(score,'get',return_value={}),patch.object(score.time,'sleep'):
+            self.assertEqual(score.gdelt_article_count('x',score.WEEK)[0],0)
+        with patch.object(score,'get',return_value={'error':'x'}),patch.object(score.time,'sleep'):
+            with self.assertRaises(ValueError):score.gdelt_article_count('x',score.WEEK)
+
     def test_stock_weekly_return_from_closes(self):
         # One synthetic EOD series: prior close 100, latest close 104.
         rows=[{'datetime':d,'close':str(p)} for d,p in [('2026-11-06',100),('2026-11-10',103),('2026-11-13',104),('2026-11-17',105)]]

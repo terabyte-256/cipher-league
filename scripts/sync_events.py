@@ -239,6 +239,8 @@ def gdelt_article_count(query,w,deadline=None):
             if retry_delay==0:retry_delay=5*(2**attempt)
             if retry_delay>=deadline-time.monotonic():raise TimeoutError('GDELT retry exceeds time budget') from ex
             time.sleep(retry_delay)
+    # A successful reply of exactly {} is how GDELT says nothing matched.
+    if result=={}:return 0,url
     series=result.get('timeline',[])
     if not series or not isinstance(series[0].get('data'),list):raise ValueError('Invalid GDELT timeline: '+json.dumps(result)[:80])
     count=sum(int(round(float(x['value']))) for x in series[0]['data'] if x.get('value') is not None)
