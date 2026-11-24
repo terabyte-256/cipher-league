@@ -145,7 +145,7 @@ def ingest_cisa():
         for w in weeks():
             group=aggregate[(a['slug'],w)]
             points=sum(12+6*int(e['ransomware']) for e in group)
-            samples=', '.join(e['cve_id'] for e in group[:8]) or 'No newly listed matched CVEs'
+            samples=', '.join(e['cve_id'] for e in group[:8]) or 'No new entries on the list this week'
             rows.append(record(a,w,points,samples,CISA,metric=f'{len(group)} KEV additions',event_count=len(group)))
     STATUS['CISA']['success']+=len(rows)
     return rows
@@ -186,7 +186,7 @@ def ingest_github():
                     count=github_query('repositories',q)
                     points=clamp(round(2*math.log2(1+count)),0,30)
                     source='https://github.com/search?'+urlencode({'q':q,'type':'repositories'})
-                    scores.append(record(a,w,points,f'{count} newly created public repositories (approximate search index)',source,
+                    scores.append(record(a,w,points,f'About {count} new public repositories',source,
                                          metric=f'{count} new repos',event_count=count))
                 else:
                     repo=a['key']
@@ -199,7 +199,7 @@ def ingest_github():
                                   iso(w)<=r['published_at'][:10]<=iso(end))
                     points=clamp(3*merged+8*published,0,30)
                     source='https://github.com/'+repo+'/pulls?q='+quote('is:pr is:merged merged:'+period)
-                    scores.append(record(a,w,points,f'{merged} merged PRs, {published} published releases',source,
+                    scores.append(record(a,w,points,f'{merged} merged pull requests, {published} releases',source,
                                          metric=f'{merged} PRs / {published} releases',event_count=merged+published))
                 STATUS['GitHub']['success']+=1
             except Exception as ex:
@@ -288,7 +288,7 @@ def ingest_social():
         try:
             count,url=gdelt_article_count(a['key'],w,deadline)
             out.append(record(a,w,clamp(round(2*math.log2(1+count)),0,30),
-                f'{count} matching English-language GDELT news articles; mentions are NOT verified attacks',
+                f'{count} English-language news articles (coverage, not confirmed attacks)',
                 url,metric=f'{count} news mentions',event_count=count))
             STATUS['GDELT']['success']+=1
         except Exception as ex:
@@ -333,7 +333,7 @@ def ingest_ai():
             latest=interior[-1]
             delta=max(0,latest['likes']-baseline['likes'])
             scores.append(record(a,w,clamp(round(delta/2),0,30),
-                f'Hugging Face model likes grew by {delta} from {baseline["sampled_on"]} to {latest["sampled_on"]}; early week incomplete if baseline late',
+                f'{delta} new likes from {baseline["sampled_on"]} to {latest["sampled_on"]}',
                 'https://huggingface.co/'+a['key'],metric=f'+{delta} likes',event_count=delta))
     return scores
 
@@ -362,7 +362,7 @@ def ingest_stocks():
                 pct=(last[1]/baseline[1]-1)*100
                 points=clamp(round(5+3*pct),-20,35)
                 scores.append(record(a,w,points,
-                    f'{pct:+.2f}% close-to-close change ({iso(baseline[0])} to {iso(last[0])}); preliminary during trading week',
+                    f'{pct:+.2f}% from the {iso(baseline[0])} close to the {iso(last[0])} close',
                     'https://twelvedata.com/',metric=f'{pct:+.2f}% weekly',event_count=1))
                 STATUS['Twelve Data']['success']+=1
             time.sleep(float(os.getenv('TWELVEDATA_DELAY_SECONDS','8.2')))

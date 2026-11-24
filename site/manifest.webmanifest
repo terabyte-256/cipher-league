@@ -1,1 +1,1 @@
-{"name":"Cipher League — Fantasy Cybersecurity","short_name":"Cipher League","start_url":"./","display":"standalone","theme_color":"#0b1220","background_color":"#0b1220","description":"Draft a cyber team and win your league.","icons":[{"src":"./favicon.svg","sizes":"any","type":"image/svg+xml"}]}
+{"name":"Cipher League","short_name":"Cipher League","start_url":"./","display":"standalone","theme_color":"#111214","background_color":"#ffffff","description":"A fantasy league for cybersecurity.","icons":[{"src":"./favicon.svg","sizes":"any","type":"image/svg+xml"}]}

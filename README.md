@@ -29,7 +29,7 @@ Cipher League is a **deployable browser game**, not a hosted service. v3.1 expan
 
 An eight-team league drafts 64 unique assets in eight rounds, leaving **204 undrafted**. Even after all eight managers draft their required starting positions, at least **25 choices remain in each category** before optional bench selections. There are still plenty of choices for future trading/waiver features (not yet implemented).
 
-Use the **Draft Pool** tab to browse before signing in. Filter by role, search by company/model/tool, and follow the reference URL for each candidate. The eighth-round bench selection also supports a position filter, search, and a paginated candidate list; undrafted candidates sort first.
+The app has four sections: **Play** (what to do next: draft or lineup), **Scores** (weekly matches and standings), **Explore** (players, rules and score sources, open to guests) and **League** (create, join, invite). The draft is drawn as a route that reverses each round; every position keeps one letter and colour. Product and design notes are in `PRODUCT.md` and `DESIGN.md`.
 
 **Existing v3 Supabase setup:** you do not need to drop or recreate tables. Run the *new* `supabase/seed.sql` in the Supabase SQL Editor to upsert the extra assets, then publish the updated `site/` folder and enable the importer. Existing candidate slugs are preserved; the seed does not delete old draft picks. **New v3.1 setup:** run `schema.sql` followed by `seed.sql` as usual.
 
@@ -48,8 +48,8 @@ The Twelve Data code in `scripts/sync_events.py` is a **server-only adapter**; t
 ```
 site/                          Static website (publish this folder; browsable pool)
   index.html, multiplayer.js, styles.css, config.js
+  fonts/                      Overpass (SIL Open Font License)
   data/assets.json, data/events.json
-  practice/                    Legacy fictional single-player game
 supabase/schema.sql            Multiplayer database, RLS and RPCs
 supabase/seed.sql              Curated category-based draft pool
 scripts/build_catalog.py      Rebuild JSON draft pool and SQL seed
@@ -57,7 +57,6 @@ scripts/validate_catalog.py    Offline checks; optional live ID preflight
 scripts/sync_events.py        All seven external signal importers
 .github/workflows/pages.yml    Scheduled ingest + Pages publish
 tests/multiplayer-test.cjs      Offline rules/unit tests
-tests/smoke-test.cjs            Legacy practice game engine test
 ```
 
 ## Run tests
@@ -66,11 +65,10 @@ tests/smoke-test.cjs            Legacy practice game engine test
 node --check site/multiplayer.js
 python3 scripts/validate_catalog.py
 node tests/multiplayer-test.cjs
-node tests/smoke-test.cjs
 python3 -m unittest discover -s tests -p 'test_*.py'
 ```
 
-Tests check catalog integrity, business logic and the static frontend. There is an optional `python3 test_browser.py` Chromium smoke test; it needs a local browser allowed to navigate to localhost. **Production Supabase (enable **Authentication → Providers → Anonymous sign-ins**; the game uses no email, only league invite codes), market licensing, upstream asset identifiers, and all third-party provider responses still require live verification.** After setup, test simultaneously in at least two separate browsers (each gets its own anonymous player) before announcing a public league.
+Tests check catalog integrity, business logic and the static frontend. There is an optional `python3 test_browser.py` Chromium smoke test; it needs Playwright with its Chromium installed (`pip install playwright && playwright install chromium`). **Production Supabase (enable **Authentication → Providers → Anonymous sign-ins**; the game uses no email, only league invite codes), market licensing, upstream asset identifiers, and all third-party provider responses still require live verification.** After setup, test simultaneously in at least two separate browsers (each gets its own anonymous player) before announcing a public league.
 
 ## License
 

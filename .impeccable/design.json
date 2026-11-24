@@ -1,0 +1,115 @@
+{
+ "schemaVersion": 2,
+ "generatedAt": "2026-11-24T23:43:43.777232+00:00",
+ "title": "Design System: Cipher League",
+ "extensions": {
+  "colorMeta": {
+   "line-forensics": {
+    "role": "line",
+    "displayName": "Forensics line",
+    "canonical": "#c8102e"
+   },
+   "line-social": {
+    "role": "line",
+    "displayName": "Social line",
+    "canonical": "#e87500"
+   },
+   "line-detection": {
+    "role": "line",
+    "displayName": "Detection line",
+    "canonical": "#b58900"
+   },
+   "line-vulnerabilities": {
+    "role": "line",
+    "displayName": "Vulnerabilities line",
+    "canonical": "#00793a"
+   },
+   "line-stocks": {
+    "role": "line",
+    "displayName": "Stocks line",
+    "canonical": "#0057a8"
+   },
+   "line-languages": {
+    "role": "line",
+    "displayName": "Languages line",
+    "canonical": "#7b4b2a"
+   },
+   "line-ai": {
+    "role": "line",
+    "displayName": "Ai line",
+    "canonical": "#00808a"
+   }
+  },
+  "shadows": [
+   {
+    "name": "toast",
+    "value": "0 8px 24px #0004",
+    "purpose": "Toasts only."
+   }
+  ],
+  "motion": [
+   {
+    "name": "state",
+    "value": "0.15s",
+    "purpose": "Button colour changes."
+   }
+  ],
+  "breakpoints": [
+   {
+    "name": "phone",
+    "value": "700px"
+   },
+   {
+    "name": "stack",
+    "value": "960px"
+   }
+  ]
+ },
+ "components": [
+  {
+   "name": "Primary button",
+   "kind": "button",
+   "refersTo": "button-primary",
+   "description": "The one next action.",
+   "html": "<button class=\"ds-btn\">Save lineup</button>",
+   "css": ".ds-btn{min-height:44px;padding:8px 20px;border:2px solid #111214;border-radius:4px;background:#111214;color:#fff;font:700 1rem Overpass,sans-serif}.ds-btn:hover{background:#34383f}.ds-btn:focus-visible{outline:3px solid #0057a8;outline-offset:2px}"
+  },
+  {
+   "name": "Input",
+   "kind": "input",
+   "refersTo": "input",
+   "description": "Text and select fields.",
+   "html": "<input class=\"ds-input\" aria-label=\"Team name\">",
+   "css": ".ds-input{min-height:44px;padding:8px 12px;border:2px solid #6c737c;border-radius:4px;font:400 1rem Overpass,sans-serif}.ds-input:focus-visible{outline:3px solid #0057a8;outline-offset:2px}"
+  },
+  {
+   "name": "Position bullet",
+   "kind": "custom",
+   "description": "One letter and colour per position.",
+   "html": "<span class=\"ds-ln\">F</span>",
+   "css": ".ds-ln{display:inline-grid;place-items:center;width:32px;height:32px;border-radius:50%;background:#c8102e;color:#fff;font:800 .9375rem Overpass,sans-serif}"
+  }
+ ],
+ "narrative": {
+  "northStar": "The Line Map",
+  "overview": "Seven positions are seven transit lines on a white wall under one black sign band.",
+  "keyCharacteristics": [
+   "One next action per screen",
+   "No cards or shadows",
+   "Fixed letter and colour per position"
+  ],
+  "rules": [
+   {
+    "name": "The Letter Rule",
+    "body": "A line colour never appears without its letter or name.",
+    "section": "colors"
+   }
+  ],
+  "dos": [
+   "Do open with the next action."
+  ],
+  "donts": [
+   "Don't use a line colour as decoration."
+  ]
+ }
+}

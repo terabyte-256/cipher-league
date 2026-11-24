@@ -52,7 +52,7 @@ class ScoringTests(unittest.TestCase):
         with patch.object(score, 'gdelt_article_count',return_value=(63,'https://api.gdeltproject.org/sample')), patch.object(score.time,'sleep'):
             rows=score.ingest_social()
         self.assertTrue(rows)
-        self.assertTrue(any(r['points']==12 and 'NOT verified attacks' in r['detail'] for r in rows))
+        self.assertTrue(any(r['points']==12 and 'not confirmed attacks' in r['detail'] for r in rows))
 
     def test_gdelt_retries_429_and_honors_retry_after(self):
         error=HTTPError('https://api.gdeltproject.org',429,'Too Many Requests',{'Retry-After':'7'},None)

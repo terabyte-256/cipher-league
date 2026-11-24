@@ -13,35 +13,30 @@ thread.start()
 base = f'http://127.0.0.1:{server.server_port}'
 try:
     with sync_playwright() as p:
-        browser = p.chromium.launch(executable_path='/usr/bin/chromium', headless=True, args=['--no-sandbox'])
+        browser = p.chromium.launch(headless=True)
         page = browser.new_page(viewport={'width': 1280, 'height': 900})
         errors = []
         page.on('pageerror', lambda exc: errors.append(str(exc)))
         page.goto(base, wait_until='domcontentloaded')
-        page.wait_for_function("document.body.innerText.includes('268')")
-        assert page.locator('h1').first.inner_text().startswith('Draft the cyber world')
-        page.locator('[data-page="pool"]').first.click()
-        page.locator('#pool-position').wait_for()
-        assert page.locator('.asset-card').count() == 48
-        assert page.locator('[data-action="more-pool"]').count() == 1
-        page.locator('#pool-position').select_option('AI')
-        assert page.locator('.asset-card').count() == 40
-        page.locator('#pool-search').fill('DeepSeek')
-        assert page.locator('.asset-card').count() >= 3
+        page.wait_for_selector('.key li')
+        assert page.locator('h1').inner_text() == 'A fantasy league for cybersecurity'
+        page.locator('#navigation [data-page="explore"]').click()
+        page.wait_for_selector('li.player')
+        assert page.locator('li.player').count() == 48
+        page.locator('[data-pos="AI"]').click()
+        assert page.locator('li.player').count() == 40
+        page.locator('#pool-search').press_sequentially('DeepSeek')
+        assert page.locator('li.player').count() >= 3
         page.locator('#pool-search').fill('')
-        page.locator('#pool-position').select_option('ALL')
+        page.locator('[data-pos="ALL"]').click()
         page.locator('[data-action="more-pool"]').click()
-        assert page.locator('.asset-card').count() == 96
-        assert page.locator('.asset-card a').count() >= 90
-        page.screenshot(path=str(SITE.parent / 'catalog-preview.png'), full_page=True)
+        assert page.locator('li.player').count() == 96
         page.set_viewport_size({'width': 390, 'height': 844})
-        page.reload(wait_until='domcontentloaded')
-        page.wait_for_function("document.body.innerText.includes('268')")
-        page.locator('[data-action="menu"]').click()
-        page.locator('[data-page="pool"]').first.click()
-        page.screenshot(path=str(SITE.parent / 'catalog-mobile-preview.png'), full_page=True)
+        for tab in ('players', 'rules', 'sources'):
+            page.goto(base + '#explore/' + tab)
+            assert page.evaluate('document.documentElement.scrollWidth') <= 390, tab
         assert not errors, errors
-        print('BROWSER PASS: homepage; guest catalog; position filter; search; pagination; mobile navigation; 0 JS errors')
+        print('BROWSER PASS: intro; guest catalog; filter; search; pagination; phone width; 0 JS errors')
         browser.close()
 finally:
     server.shutdown()

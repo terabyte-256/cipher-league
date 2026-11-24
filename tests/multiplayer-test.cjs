@@ -9,11 +9,11 @@ vm.runInContext(source,ctx);
 const run=s=>vm.runInContext(s,ctx);
 run('S.assets='+JSON.stringify(assets));
 assert.strictEqual(run('POSITIONS.length'),7);
-assert(run('poolPage()').includes('268 candidates match'));
-assert.strictEqual((run('poolPage()').match(/class=\"asset-card\"/g)||[]).length,48,'48 guest catalog entries initially');
-assert(run('poolPage()').includes('SHOW 48 MORE'));
+assert(run('playersTab()').includes('268 of 268 players'));
+assert.strictEqual((run('playersTab()').match(/<li class="player">/g)||[]).length,48,'48 guest catalog entries initially');
+assert(run('playersTab()').includes('Show 48 more'));
 run("S.poolPosition='DEF'");
-assert(run('poolPage()').includes('45 of 268 candidates match'));
+assert(run('playersTab()').includes('45 of 268 players'));
 run("S.poolPosition='ALL'");
 
 assert.strictEqual(assets.length,268);
@@ -25,15 +25,17 @@ for(const position of ['DFIR','SOCIAL','SOC','VULN','DEF','LANG','AI']){
 }
 run(`S.session={user:{id:'user0'}}; S.league={id:'l',name:'Test League',status:'draft',start_on:null,max_teams:2};
 S.leagueId='l';S.members=[{user_id:'user0',team_name:'Blue',seat:0},{user_id:'user1',team_name:'Red',seat:1}];`);
-assert(run('draftPage()').includes('DFIR / Forensics'));
+assert(run('draftPage()').includes('Your pick: forensics'));
+assert(run('draftPage()').includes('class="route"'),'draft route drawn');
 assert(run('draftPage()').includes('Volatility 3'));
-assert(run('draftPage()').includes('REAL-WORLD SOURCE'));
-assert(run('draftPage()').includes('33 MATCHES')); 
-assert(!run('draftPage()').includes('<h3>Python</h3>'));
+assert(run('draftPage()').includes('Source for Volatility 3'));
+assert(run('draftPage()').includes('33 available'));
+assert(!run('draftPage()').includes('<strong>Python</strong>'));
 run(`S.picks=[{pick_no:1,member_id:'user0',asset_slug:'volatility'}, {pick_no:2,member_id:'user1',asset_slug:'autopsy'}]`);
-assert(run('draftPage()').includes('SOCIAL / Social Engineering'));
-assert(run('draftPage()').includes('<h3>Phishing</h3>'));
-assert(!run('draftPage()').includes('<h3>Volatility 3</h3>'));
+assert(run('draftPage()').includes('Red is picking'));
+assert(run('draftPage()').includes('Ways attackers trick people'));
+assert(run('draftPage()').includes('<strong>Phishing</strong>'));
+assert(!run('draftPage()').includes('Source for Volatility 3'));
 assert.strictEqual(run('nextPicker().user_id'),'user1','Reverse order in snake round two');
 // Last round has 268 possible bench choices; pagination and position filtering keep it usable.
 const picks=[];
@@ -42,13 +44,13 @@ for(let i=0;i<7;i++)for(let j=0;j<2;j++){
  picks.push({pick_no:picks.length+1,member_id:'user'+j,asset_slug:a.slug});
 }
 run('S.picks='+JSON.stringify(picks));
-assert(run('draftPage()').includes('ANY POSITION / BENCH'));
-assert(run('draftPage()').includes('SHOW 36 MORE CANDIDATES'));
+assert(run('draftPage()').includes('Choose from any position'));
+assert(run('draftPage()').includes('Show 36 more'));
 run("S.draftPosition='AI'");
 const aiBench=run('draftPage()');
-assert(aiBench.includes('All seven positions'));
-assert(aiBench.includes('40 MATCHES'));
-assert(!aiBench.includes('<h3>Phishing</h3>'));
+assert(aiBench.includes('All positions'));
+assert((aiBench.match(/aria-label="Source for |Taken by /g)||[]).length>=36);
+assert(!aiBench.includes('Source for Phishing'));
 
 const all=[];
 for(let w=0;w<7;w++){
@@ -80,8 +82,14 @@ assert.strictEqual(run('weekReady(1)'),false);
 assert.strictEqual(run("weekStarters('user0','2026-11-02').length"),7);
 run('S.weekScores=S.weekScores.slice(0,13)');
 assert.strictEqual(run('weekReady(0)'),false,'Incomplete provider data blocks final scores');
-assert(run('rulesPage()').includes('Social Engineering'));
-assert(run('rulesPage()').includes('Stock'));
+assert(run('rulesTab()').includes('Social engineering'));
+assert(run('rulesTab()').includes('Tech stocks'));
+// A score that has not arrived is pending, never zero.
+assert.strictEqual(run("JSON.stringify(weekTotal('user1',1))"),'{"points":0,"measured":0}');
+run("S.week=1;");
+const pendingWeek=run('scoresPage()');
+assert(pendingWeek.includes('>Pending</span>'),'missing scores show as Pending');
+assert(!pendingWeek.includes('class="total">0<'),'missing scores never total to zero');
 console.log('PASS: 268 assets; pagination and bench filters;  seven positions; ordered snake draft; 8-team schedule; byes; lineup and missing-score detection');
 
 // Anonymous sign-in: no email flow, session minted lazily on create/join.
@@ -109,54 +117,61 @@ Promise.resolve(run('ensureSession().then(()=>[S.session.user.id,__signins])')).
  assert.strictEqual(focusedField, 'create-league-name', 'Focus restored to active element');
  assert.strictEqual(mockInput.selStart, 4, 'Selection range restored');
 
- // 2. Draft complete panel and action mapping
- run(`S.session={user:{id:'user0'}}; S.members=[{user_id:'user0',team_name:'Blue',seat:0},{user_id:'user1',team_name:'Red',seat:1}];
- S.league={id:'l',name:'Test League',status:'live',start_on:'2026-11-02',max_teams:2};
- S.picks=Array.from({length:16},(_,i)=>({pick_no:i+1,member_id:'user'+(i%2),asset_slug:S.assets[i].slug}));`);
- const draftComplete = run('draftPage()');
- assert(draftComplete.includes('DRAFT COMPLETE'), 'Draft page shows draft complete panel');
- assert(draftComplete.includes('data-action="go-roster"'), 'Draft page has button to My Lineup');
- assert(draftComplete.includes('data-action="go-standings"'), 'Draft page has button to Standings');
- assert(!draftComplete.includes('CANDIDATES'), 'Candidate grid is not shown when draft is finished');
- run(`act({dataset:{action:'go-roster'}});`);
- assert.strictEqual(run('S.page'), 'roster', 'go-roster action navigates to roster page');
+ // 2. Four destinations, old links still land, one current page marked
+ run("S.page='scores'; nav();");
+ assert.strictEqual((nodes['navigation'].innerHTML.match(/data-page=/g)||[]).length,4);
+ assert(nodes['navigation'].innerHTML.includes('data-page="scores" aria-current="page"'));
+ for(const [hash,page,tab] of [['#pool','explore','players'],['#rules','explore','rules'],['#events','explore','sources'],['#roster','play',null],['#standings','scores',null],['#explore/sources','explore','sources']]){
+  ctx.location.hash=hash; assert.strictEqual(run('readHash()'),true,hash); assert.strictEqual(run('S.page'),page,hash); if(tab)assert.strictEqual(run('S.tab'),tab,hash);
+ }
 
  // 3. Opening ?invite=CODE while already in a different league lets user reach join form
  run(`S.league={id:'l_other',name:'Other League',invite_code:'DIFFCODE99',status:'lobby'}; S.invite='TARGETINVITE';`);
  const joinReach = run('leaguesPage()');
  assert(joinReach.includes('join-league'), 'Reaches join form when invite is for a different league');
  assert(joinReach.includes('TARGETINVITE'), 'Join form has target invite code prefilled');
- assert(!joinReach.includes('Other League · LOBBY'), 'Does not trap user in other league room');
+ assert(joinReach.includes('You have been invited'));
+ assert(!joinReach.includes('Other League'), 'Does not trap user in other league room');
 
- // 4. Accessibility: form labels/ids, nav aria-current, menu button aria-expanded & touch target
- const leaguesMarkup = run('leaguesPage()');
- assert(leaguesMarkup.includes('for="create-league-name"') && leaguesMarkup.includes('id="create-league-name"'), 'create form field has label for and id');
- assert(leaguesMarkup.includes('for="join-invite"') && leaguesMarkup.includes('id="join-invite"'), 'join form field has label for and id');
- run("S.page='roster'; nav();");
- assert(nodes['navigation'].innerHTML.includes('data-page="roster" class="nav active" aria-current="page"'), 'active nav has aria-current="page"');
- assert(!nodes['navigation'].innerHTML.includes('data-page="home" class="nav " aria-current'), 'inactive nav lacks aria-current');
- const indexSource = fs.readFileSync(__dirname+'/../site/index.html','utf8');
- assert(indexSource.includes('data-action="menu"') && indexSource.includes('aria-expanded="false"'), 'menu button has initial aria-expanded="false"');
- const cssSource = fs.readFileSync(__dirname+'/../site/styles.css','utf8');
- assert(cssSource.includes('.hamburger') && cssSource.includes('44px'), 'menu button has 44px touch target in css');
- let drawerClosed = false;
- let menuExpandedState = null;
- const menuBtnMock = {setAttribute(k,v){if(k==='aria-expanded')menuExpandedState=v;},focus(){}};
- ctx.document.querySelector = sel => sel === '[data-action="menu"]' ? menuBtnMock : null;
- nodes['sidebar'].classList.toggle = (cls, force) => { if(cls==='open'&&!force) drawerClosed = true; };
- nodes['scrim'].classList.toggle = () => {};
- run("setMenuOpen(false);");
- assert.strictEqual(drawerClosed, true, 'setMenuOpen closes sidebar');
- assert.strictEqual(menuExpandedState, 'false', 'menu aria-expanded updated to false');
+ // 4. Forms are labelled; owner of a lobby gets one next action; finished season offers no lineup save
+ assert(joinReach.includes('for="create-league-name"') && joinReach.includes('id="create-league-name"'));
+ assert(joinReach.includes('for="join-invite"') && joinReach.includes('id="join-invite"'));
+ run(`S.invite=''; S.session={user:{id:'user0'}}; S.members=[{user_id:'user0',team_name:'Blue',seat:0}];
+ S.league={id:'l',name:'Test League',status:'lobby',invite_code:'ABCD1234',owner_id:'user0',max_teams:2};`);
+ assert(!run('playPage()').includes('data-action="start-draft"'),'cannot start alone');
+ assert(run('leaguesPage()').includes('Open seat'));
+ run(`S.members.push({user_id:'user1',team_name:'Red',seat:1});`);
+ assert(run('playPage()').includes('data-action="start-draft"'));
+ run(`S.league={id:'l',status:'live',start_on:'2020-01-06',max_teams:2};`);
+ assert(!run('playPage()').includes('save-lineup'),'no lineup save after the season');
+ assert(run('playPage()').includes('The season is over'));
 
- // 5. Standings page markup is balanced and direct grid children
- run(`S.league={id:'l',status:'live',start_on:'2026-11-02',max_teams:2}; S.week=0;`);
- const standingsHtml = run('standingsPage()');
- assert(standingsHtml.includes('<div class="two"><section class="panel">'), 'standings .two has direct panel child');
- assert(!standingsHtml.includes('<div class="two"><div>'), 'no mislaid <div> wrapper inside standings .two');
- const openDivs = (standingsHtml.match(/<div(\s|>)/g)||[]).length;
- const closeDivs = (standingsHtml.match(/<\/div>/g)||[]).length;
- assert.strictEqual(openDivs, closeDivs, 'standingsPage div tags are balanced');
+ // 5. Team names are escaped everywhere they are printed
+ run(`S.league={id:'l',status:'draft',max_teams:2}; S.picks=[]; S.members[1].team_name='<img src=x>';`);
+ assert(!run('draftPage()').includes('<img'), 'team names are escaped');
 
- console.log('PASS: realtime form preservation, draft complete panel, invite handling, accessibility, and standings markup');
+ console.log('PASS: form preservation, navigation, invite handling, states and escaping');
 });
+
+// Switching leagues while another league is still loading must not leave the new one empty,
+// and a change that arrives during a load triggers one more load.
+(async()=>{
+ await new Promise(r=>setImmediate(r)); // let the earlier async checks finish first
+ const held={};let loads={};
+ const result=(table,id)=>table==='leagues'?{id,name:id,status:'lobby',invite_code:'X',owner_id:'me',max_teams:2}:[];
+ ctx.__client={from(table){let id;const q={select:()=>q,order:()=>q,single:()=>q,eq:(_k,v)=>{id=v;return q;},
+   then(resolve){if(table==='leagues')loads[id]=(loads[id]||0)+1;const send=()=>resolve({data:result(table,id),error:null});if(id==='A'&&table==='leagues'&&!held.A)held.A=send;else send();}};return q;}};
+ run("S.client=__client;S.session={user:{id:'me'}};S.league=null;S.refreshing=null;S.leagueId='A';");
+ const first=run('roomRefresh()');
+ await Promise.resolve();
+ run("S.leagueId='B'");
+ assert.strictEqual(await run('roomRefresh()'),true,'league B loads while A is in flight');
+ held.A();await first;
+ assert.strictEqual(run('S.league.id'),'B','stale league A response ignored');
+ delete held.A;run("S.leagueId='A';S.league=null;");
+ const again=run('roomRefresh()');await Promise.resolve();
+ await run('roomRefresh()');
+ held.A();await again;await new Promise(r=>setImmediate(r));
+ assert.strictEqual(loads.A,3,'a change during a load causes one follow-up load');
+ console.log('PASS: league switching and mid-load changes');
+})().catch(e=>{console.error(e);process.exit(1);});
