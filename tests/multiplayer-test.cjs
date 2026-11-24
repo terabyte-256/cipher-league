@@ -3,7 +3,7 @@ const fs=require('fs'),vm=require('vm'),assert=require('assert');
 const source=fs.readFileSync(__dirname+'/../site/multiplayer.js','utf8').replace('void init();','/* init omitted for isolated tests */');
 const assets=JSON.parse(fs.readFileSync(__dirname+'/../site/data/assets.json','utf8'));
 const nodes={};const element=id=>nodes[id]||(nodes[id]={innerHTML:'',textContent:'',addEventListener(){},classList:{add(){},remove(){},toggle(){}},append(){}});
-const ctx={console,window:{CIPHER_CONFIG:{},scrollTo(){},addEventListener(){}},document:{getElementById:element,addEventListener(){},createElement(){return {className:'',textContent:'',remove(){}}}},location:{hash:'',origin:'https://game.test',pathname:'/app/',search:''},navigator:{},URL,URLSearchParams,Date,Set,Map,setTimeout(){}};
+const ctx={console,window:{CIPHER_CONFIG:{supabaseUrl:'https://test.supabase.co',supabaseAnonKey:'anon-key'},scrollTo(){},addEventListener(){}},document:{getElementById:element,addEventListener(){},createElement(){return {className:'',textContent:'',remove(){}}}},location:{hash:'',origin:'https://game.test',pathname:'/app/',search:''},navigator:{},URL,URLSearchParams,Date,Set,Map,setTimeout(){}};
 vm.createContext(ctx);
 vm.runInContext(source,ctx);
 const run=s=>vm.runInContext(s,ctx);
@@ -91,4 +91,72 @@ Promise.resolve(run('ensureSession().then(()=>[S.session.user.id,__signins])')).
  assert.strictEqual(JSON.stringify(r),'["anon1",1]','session minted once, reused after');
  run(`S.client={auth:{signInAnonymously:async()=>({data:null,error:{message:'Anonymous sign-ins are disabled'}})}};S.session=null;`);
  return run('ensureSession()').then(()=>{throw Error('should fail');},e=>assert(/Supabase/.test(e.message)));
-}).then(()=>console.log('PASS: anonymous sign-in flow'));
+}).then(()=>{
+ console.log('PASS: anonymous sign-in flow');
+
+ // 1. Form inputs and focus preserved across render()
+ let focusedField = null;
+ const mockInput = {id:'create-league-name',name:'leagueName',value:'Test Redux',selectionStart:4,selectionEnd:4,focus(){focusedField=this.id;},setSelectionRange(s,e){this.selStart=s;this.selEnd=e;}};
+ const mockInput2 = {id:'create-team-name',name:'teamName',value:'Cyber Defenders',selectionStart:0,selectionEnd:0,focus(){focusedField=this.id;}};
+ const mockForm = {elements:[mockInput, mockInput2]};
+ nodes['create-league'] = mockForm;
+ nodes['create-league-name'] = mockInput;
+ nodes['create-team-name'] = mockInput2;
+ ctx.document.activeElement = mockInput;
+ run('render()');
+ assert.strictEqual(mockInput.value, 'Test Redux', 'Form input value preserved across render');
+ assert.strictEqual(mockInput2.value, 'Cyber Defenders', 'Second form input preserved');
+ assert.strictEqual(focusedField, 'create-league-name', 'Focus restored to active element');
+ assert.strictEqual(mockInput.selStart, 4, 'Selection range restored');
+
+ // 2. Draft complete panel and action mapping
+ run(`S.session={user:{id:'user0'}}; S.members=[{user_id:'user0',team_name:'Blue',seat:0},{user_id:'user1',team_name:'Red',seat:1}];
+ S.league={id:'l',name:'Test League',status:'live',start_on:'2026-11-02',max_teams:2};
+ S.picks=Array.from({length:16},(_,i)=>({pick_no:i+1,member_id:'user'+(i%2),asset_slug:S.assets[i].slug}));`);
+ const draftComplete = run('draftPage()');
+ assert(draftComplete.includes('DRAFT COMPLETE'), 'Draft page shows draft complete panel');
+ assert(draftComplete.includes('data-action="go-roster"'), 'Draft page has button to My Lineup');
+ assert(draftComplete.includes('data-action="go-standings"'), 'Draft page has button to Standings');
+ assert(!draftComplete.includes('CANDIDATES'), 'Candidate grid is not shown when draft is finished');
+ run(`act({dataset:{action:'go-roster'}});`);
+ assert.strictEqual(run('S.page'), 'roster', 'go-roster action navigates to roster page');
+
+ // 3. Opening ?invite=CODE while already in a different league lets user reach join form
+ run(`S.league={id:'l_other',name:'Other League',invite_code:'DIFFCODE99',status:'lobby'}; S.invite='TARGETINVITE';`);
+ const joinReach = run('leaguesPage()');
+ assert(joinReach.includes('join-league'), 'Reaches join form when invite is for a different league');
+ assert(joinReach.includes('TARGETINVITE'), 'Join form has target invite code prefilled');
+ assert(!joinReach.includes('Other League · LOBBY'), 'Does not trap user in other league room');
+
+ // 4. Accessibility: form labels/ids, nav aria-current, menu button aria-expanded & touch target
+ const leaguesMarkup = run('leaguesPage()');
+ assert(leaguesMarkup.includes('for="create-league-name"') && leaguesMarkup.includes('id="create-league-name"'), 'create form field has label for and id');
+ assert(leaguesMarkup.includes('for="join-invite"') && leaguesMarkup.includes('id="join-invite"'), 'join form field has label for and id');
+ run("S.page='roster'; nav();");
+ assert(nodes['navigation'].innerHTML.includes('data-page="roster" class="nav active" aria-current="page"'), 'active nav has aria-current="page"');
+ assert(!nodes['navigation'].innerHTML.includes('data-page="home" class="nav " aria-current'), 'inactive nav lacks aria-current');
+ const indexSource = fs.readFileSync(__dirname+'/../site/index.html','utf8');
+ assert(indexSource.includes('data-action="menu"') && indexSource.includes('aria-expanded="false"'), 'menu button has initial aria-expanded="false"');
+ const cssSource = fs.readFileSync(__dirname+'/../site/styles.css','utf8');
+ assert(cssSource.includes('.hamburger') && cssSource.includes('44px'), 'menu button has 44px touch target in css');
+ let drawerClosed = false;
+ let menuExpandedState = null;
+ const menuBtnMock = {setAttribute(k,v){if(k==='aria-expanded')menuExpandedState=v;},focus(){}};
+ ctx.document.querySelector = sel => sel === '[data-action="menu"]' ? menuBtnMock : null;
+ nodes['sidebar'].classList.toggle = (cls, force) => { if(cls==='open'&&!force) drawerClosed = true; };
+ nodes['scrim'].classList.toggle = () => {};
+ run("setMenuOpen(false);");
+ assert.strictEqual(drawerClosed, true, 'setMenuOpen closes sidebar');
+ assert.strictEqual(menuExpandedState, 'false', 'menu aria-expanded updated to false');
+
+ // 5. Standings page markup is balanced and direct grid children
+ run(`S.league={id:'l',status:'live',start_on:'2026-11-02',max_teams:2}; S.week=0;`);
+ const standingsHtml = run('standingsPage()');
+ assert(standingsHtml.includes('<div class="two"><section class="panel">'), 'standings .two has direct panel child');
+ assert(!standingsHtml.includes('<div class="two"><div>'), 'no mislaid <div> wrapper inside standings .two');
+ const openDivs = (standingsHtml.match(/<div(\s|>)/g)||[]).length;
+ const closeDivs = (standingsHtml.match(/<\/div>/g)||[]).length;
+ assert.strictEqual(openDivs, closeDivs, 'standingsPage div tags are balanced');
+
+ console.log('PASS: realtime form preservation, draft complete panel, invite handling, accessibility, and standings markup');
+});

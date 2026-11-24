@@ -3,6 +3,7 @@ from pathlib import Path
 import unittest
 from unittest.mock import patch
 from datetime import date, timedelta
+from urllib.error import HTTPError
 
 MODULE=Path(__file__).resolve().parents[1]/'scripts/sync_events.py'
 spec=importlib.util.spec_from_file_location('sync_events',MODULE)
@@ -52,6 +53,43 @@ class ScoringTests(unittest.TestCase):
             rows=score.ingest_social()
         self.assertTrue(rows)
         self.assertTrue(any(r['points']==12 and 'NOT verified attacks' in r['detail'] for r in rows))
+
+    def test_gdelt_retries_429_and_honors_retry_after(self):
+        error=HTTPError('https://api.gdeltproject.org',429,'Too Many Requests',{'Retry-After':'7'},None)
+        result={'timeline':[{'data':[{'value':'12'}]}]}
+        now=[100.0]
+        request_times=[]
+        def sleep(seconds):now[0]+=seconds
+        def get(*args,**kwargs):
+            request_times.append(now[0])
+            if len(request_times)==1:raise error
+            return result
+        with patch.object(score,'LAST_GDELT_REQUEST',94.8),patch.object(score.time,'monotonic',side_effect=lambda:now[0]),\
+             patch.object(score.time,'sleep',side_effect=sleep) as mock_sleep,patch.object(score,'get',side_effect=get) as mock_get:
+            count,_=score.gdelt_article_count('test',date(2026,11,16),deadline=200)
+        self.assertEqual(count,12)
+        self.assertEqual(mock_get.call_count,2)
+        self.assertEqual(request_times[1]-request_times[0],7)
+        mock_sleep.assert_called_once_with(7)
+        error.close()
+
+    def test_gdelt_retry_stops_at_time_budget_without_a_score(self):
+        error=HTTPError('https://api.gdeltproject.org',429,'Too Many Requests',{'Retry-After':'60'},None)
+        with patch.object(score,'LAST_GDELT_REQUEST',0),patch.object(score.time,'monotonic',return_value=100),\
+             patch.object(score.time,'sleep') as sleep,patch.object(score,'get',side_effect=error) as get:
+            with self.assertRaises(TimeoutError):
+                score.gdelt_article_count('test',date(2026,11,16),deadline=101)
+        get.assert_called_once()
+        sleep.assert_not_called()
+        error.close()
+
+    def test_social_budget_leaves_unqueried_asset_weeks_pending(self):
+        assets=[{'provider':'gdelt','slug':'one','key':'one'},{'provider':'gdelt','slug':'two','key':'two'}]
+        with patch.object(score,'ASSETS',assets),patch.object(score,'weeks',return_value=(date(2026,11,16),)),\
+             patch.object(score,'GDELT_TIME_BUDGET',0):
+            rows=score.ingest_social()
+        self.assertEqual(rows,[])
+        self.assertEqual(score.STATUS['GDELT']['pending'],2)
 
     def test_stock_weekly_return_from_closes(self):
         # One synthetic EOD series: prior close 100, latest close 104.

@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 from collections import defaultdict
 from datetime import datetime, date, timedelta, timezone
+from email.utils import parsedate_to_datetime
 import json
 import math
 import os
@@ -36,6 +37,10 @@ GH_TOKEN = os.getenv('GH_TOKEN','') or os.getenv('GITHUB_TOKEN','')
 STOCK_KEY = os.getenv('TWELVEDATA_API_KEY','')
 STATUS = defaultdict(lambda: {'success':0,'failed':0})
 LAST_SEARCH = 0.0
+LAST_GDELT_REQUEST = 0.0
+GDELT_MIN_INTERVAL = 5.1
+GDELT_TIME_BUDGET = 15 * 60
+GDELT_MAX_ATTEMPTS = 4
 
 
 def get(url, headers=None, json_result=True, timeout=40):
@@ -203,12 +208,37 @@ def ingest_github():
     return scores
 
 
-def gdelt_article_count(query,w):
+def gdelt_article_count(query,w,deadline=None):
     params={'query':query+' sourcelang:english','mode':'timelinevolraw','format':'json',
             'startdatetime':w.strftime('%Y%m%d')+'000000',
             'enddatetime':(w+timedelta(days=7)).strftime('%Y%m%d')+'000000'}
     url=GDELT+'?'+urlencode(params)
-    result=get(url)
+    global LAST_GDELT_REQUEST
+    deadline=deadline or time.monotonic()+GDELT_TIME_BUDGET
+    for attempt in range(GDELT_MAX_ATTEMPTS):
+        delay=GDELT_MIN_INTERVAL-(time.monotonic()-LAST_GDELT_REQUEST)
+        if delay>0:
+            if delay>=deadline-time.monotonic():raise TimeoutError('GDELT time budget exhausted')
+            time.sleep(delay)
+        remaining=deadline-time.monotonic()
+        if remaining<=0:raise TimeoutError('GDELT time budget exhausted')
+        LAST_GDELT_REQUEST=time.monotonic()
+        try:
+            result=get(url,timeout=min(40,remaining))
+            break
+        except HTTPError as ex:
+            if ex.code!=429 or attempt+1==GDELT_MAX_ATTEMPTS:raise
+            retry_after=ex.headers.get('Retry-After')
+            try:
+                retry_delay=max(0,float(retry_after))
+            except (TypeError,ValueError):
+                try:
+                    retry_delay=max(0,(parsedate_to_datetime(retry_after)-datetime.now(timezone.utc)).total_seconds())
+                except (TypeError,ValueError,OverflowError):
+                    retry_delay=5*(2**attempt)
+            if retry_delay==0:retry_delay=5*(2**attempt)
+            if retry_delay>=deadline-time.monotonic():raise TimeoutError('GDELT retry exceeds time budget') from ex
+            time.sleep(retry_delay)
     series=result.get('timeline',[])
     if not series or not isinstance(series[0].get('data'),list):raise ValueError('Invalid GDELT timeline')
     count=sum(int(round(float(x['value']))) for x in series[0]['data'] if x.get('value') is not None)
@@ -217,19 +247,23 @@ def gdelt_article_count(query,w):
 
 def ingest_social():
     out=[]
-    for a in ASSETS:
-        if a['provider']!='gdelt':continue
-        for w in weeks():
-            try:
-                count,url=gdelt_article_count(a['key'],w)
-                out.append(record(a,w,clamp(round(2*math.log2(1+count)),0,30),
-                    f'{count} matching English-language GDELT news articles; mentions are NOT verified attacks',
-                    url,metric=f'{count} news mentions',event_count=count))
-                STATUS['GDELT']['success']+=1
-                time.sleep(5.1)
-            except Exception as ex:
-                STATUS['GDELT']['failed']+=1
-                print('GDELT skipped',a['slug'],iso(w),str(ex)[:140],file=sys.stderr)
+    STATUS['GDELT'].setdefault('pending',0)
+    targets=[(a,w) for a in ASSETS if a['provider']=='gdelt' for w in weeks()]
+    deadline=time.monotonic()+GDELT_TIME_BUDGET
+    for index,(a,w) in enumerate(targets):
+        if time.monotonic()>=deadline:
+            STATUS['GDELT']['pending']+=len(targets)-index
+            print(f'GDELT time budget exhausted; {len(targets)-index} asset-weeks remain pending',file=sys.stderr)
+            break
+        try:
+            count,url=gdelt_article_count(a['key'],w,deadline)
+            out.append(record(a,w,clamp(round(2*math.log2(1+count)),0,30),
+                f'{count} matching English-language GDELT news articles; mentions are NOT verified attacks',
+                url,metric=f'{count} news mentions',event_count=count))
+            STATUS['GDELT']['success']+=1
+        except Exception as ex:
+            STATUS['GDELT']['failed']+=1
+            print('GDELT skipped',a['slug'],iso(w),str(ex)[:140],file=sys.stderr)
     return out
 
 
