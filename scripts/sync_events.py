@@ -314,17 +314,20 @@ def main():
     args=ap.parse_args()
     sources={'cisa':ingest_cisa,'github':ingest_github,'social':ingest_social,'ai':ingest_ai,'stock':ingest_stocks}
     chosen=sources.items() if args.source=='all' else [(args.source,sources[args.source])]
-    rows=[]
+    rows=[];failed_sources=[]
     for name,fn in chosen:
         print('===',name,'===',flush=True)
         try: rows.extend(fn())
         except Exception as ex:
             print('ERROR IN',name,':',str(ex)[:300],file=sys.stderr)
-            STATUS[name]['failed']+=1
+            STATUS[name]['failed']+=1;failed_sources.append(name)
     upsert('asset_week_scores',rows,'asset_slug,week_start')
     print('SUMMARY:',json.dumps(dict(STATUS)))
     print('Total updated score records:',len(rows))
     if not rows:
         print('No scores updated: check provider API keys, network and rate limits.',file=sys.stderr)
+    if failed_sources:
+        print('FAILED SOURCES:',', '.join(failed_sources),file=sys.stderr)
+        sys.exit(1)
 
 if __name__=='__main__':main()

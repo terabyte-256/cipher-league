@@ -3,7 +3,7 @@ const fs=require('fs'),vm=require('vm'),assert=require('assert');
 const source=fs.readFileSync(__dirname+'/../site/multiplayer.js','utf8').replace('void init();','/* init omitted for isolated tests */');
 const assets=JSON.parse(fs.readFileSync(__dirname+'/../site/data/assets.json','utf8'));
 const nodes={};const element=id=>nodes[id]||(nodes[id]={innerHTML:'',textContent:'',addEventListener(){},classList:{add(){},remove(){},toggle(){}},append(){}});
-const ctx={console,window:{CIPHER_CONFIG:{},scrollTo(){}},document:{getElementById:element,addEventListener(){},createElement(){return {className:'',textContent:'',remove(){}}}},location:{hash:'',origin:'https://game.test',pathname:'/app/',search:''},navigator:{},URL,URLSearchParams,Date,Set,Map,setTimeout(){}};
+const ctx={console,window:{CIPHER_CONFIG:{},scrollTo(){},addEventListener(){}},document:{getElementById:element,addEventListener(){},createElement(){return {className:'',textContent:'',remove(){}}}},location:{hash:'',origin:'https://game.test',pathname:'/app/',search:''},navigator:{},URL,URLSearchParams,Date,Set,Map,setTimeout(){}};
 vm.createContext(ctx);
 vm.runInContext(source,ctx);
 const run=s=>vm.runInContext(s,ctx);
@@ -83,3 +83,12 @@ assert.strictEqual(run('weekReady(0)'),false,'Incomplete provider data blocks fi
 assert(run('rulesPage()').includes('Social Engineering'));
 assert(run('rulesPage()').includes('Stock'));
 console.log('PASS: 268 assets; pagination and bench filters;  seven positions; ordered snake draft; 8-team schedule; byes; lineup and missing-score detection');
+
+// Anonymous sign-in: no email flow, session minted lazily on create/join.
+assert(!source.includes('signInWithOtp'),'email OTP flow removed');
+run(`S.session=null;var __signins=0;S.client={auth:{signInAnonymously:async()=>{__signins++;return {data:{session:{user:{id:'anon1'}}},error:null};}}};`);
+Promise.resolve(run('ensureSession().then(()=>[S.session.user.id,__signins])')).then(r=>{
+ assert.strictEqual(JSON.stringify(r),'["anon1",1]','session minted once, reused after');
+ run(`S.client={auth:{signInAnonymously:async()=>({data:null,error:{message:'Anonymous sign-ins are disabled'}})}};S.session=null;`);
+ return run('ensureSession()').then(()=>{throw Error('should fail');},e=>assert(/Supabase/.test(e.message)));
+}).then(()=>console.log('PASS: anonymous sign-in flow'));

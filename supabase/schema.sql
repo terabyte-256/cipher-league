@@ -85,7 +85,7 @@ create policy picks_members_only on public.draft_picks for select to authenticat
 drop policy if exists lineups_members_only on public.lineup_entries;
 create policy lineups_members_only on public.lineup_entries for select to authenticated using(public.is_league_member(league_id));
 -- Never grant write access to the client, even if it knows asset IDs.
-revoke insert,update,delete on public.assets,public.asset_week_scores,public.kev_events,public.ai_snapshots,
+revoke all on public.assets,public.asset_week_scores,public.kev_events,public.ai_snapshots,
  public.leagues,public.league_members,public.draft_picks,public.lineup_entries from anon,authenticated;
 grant select on public.assets,public.asset_week_scores,public.kev_events to anon,authenticated;
 grant select on public.leagues,public.league_members,public.draft_picks,public.lineup_entries to authenticated;
@@ -102,7 +102,7 @@ begin
  if p_max_teams not between 2 and 8 then raise exception 'Choose 2-8 teams';end if;
  if (select count(*) from public.league_members where user_id=auth.uid())>=15 then raise exception 'League limit reached';end if;
  for i in 1..10 loop
-  v_code:=upper(substr(replace(gen_random_uuid()::text,'-',''),1,8));
+  v_code:=upper(substr(replace(gen_random_uuid()::text,'-',''),1,12));
   begin
    insert into public.leagues(invite_code,name,owner_id,max_teams)values(v_code,p_name,auth.uid(),p_max_teams) returning id into v_id;
    exit;

@@ -68,7 +68,7 @@ node tests/smoke-test.cjs
 python3 -m unittest discover -s tests -p 'test_*.py'
 ```
 
-Tests check catalog integrity, business logic and the static frontend. There is an optional `python3 test_browser.py` Chromium smoke test; it needs a local browser allowed to navigate to localhost. **Production Supabase/OTP, market licensing, upstream asset identifiers, and all third-party provider responses still require live verification.** After setup, test simultaneously with at least two email accounts before announcing a public league.
+Tests check catalog integrity, business logic and the static frontend. There is an optional `python3 test_browser.py` Chromium smoke test; it needs a local browser allowed to navigate to localhost. **Production Supabase (enable **Authentication → Providers → Anonymous sign-ins**; the game uses no email, only league invite codes), market licensing, upstream asset identifiers, and all third-party provider responses still require live verification.** After setup, test simultaneously in at least two separate browsers (each gets its own anonymous player) before announcing a public league.
 
 ## License
 
