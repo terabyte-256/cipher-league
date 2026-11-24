@@ -91,6 +91,19 @@ class ScoringTests(unittest.TestCase):
         self.assertEqual(rows,[])
         self.assertEqual(score.STATUS['GDELT']['pending'],2)
 
+    def test_social_targets_skip_final_and_fresh_rows_missing_first(self):
+        assets=[{'slug':s,'provider':'gdelt','key':s} for s in ('done','stale','missing')]
+        prev=score.iso(score.WEEK-score.timedelta(days=7));cur=score.iso(score.WEEK)
+        after=score.NOW.isoformat();old=(score.NOW-score.timedelta(days=30)).isoformat()
+        stored=[{'asset_slug':'done','week_start':prev,'updated_at':after},
+                {'asset_slug':'done','week_start':cur,'updated_at':after},
+                {'asset_slug':'stale','week_start':prev,'updated_at':old},
+                {'asset_slug':'stale','week_start':cur,'updated_at':old}]
+        with patch.object(score,'ASSETS',assets),patch.object(score,'URL','https://x'),patch.object(score,'KEY','k'),\
+             patch.object(score,'supabase',return_value=stored):
+            got=[(a['slug'],score.iso(w)) for a,w in score.social_targets()]
+        self.assertEqual(got,[('missing',prev),('missing',cur),('stale',prev),('stale',cur)])
+
     def test_stock_weekly_return_from_closes(self):
         # One synthetic EOD series: prior close 100, latest close 104.
         rows=[{'datetime':d,'close':str(p)} for d,p in [('2026-11-06',100),('2026-11-10',103),('2026-11-13',104),('2026-11-17',105)]]

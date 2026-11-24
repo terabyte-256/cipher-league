@@ -1,0 +1,26 @@
+name: Top up social engineering scores
+# GDELT throttles shared runners, so fetch whatever is still missing in small
+# passes. Writes to Supabase only; it does not redeploy the site.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '47 */3 * * *'
+permissions:
+  contents: read
+concurrency:
+  group: cipher-social
+  cancel-in-progress: false
+jobs:
+  social:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Import missing GDELT scores
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: python scripts/sync_events.py --source social

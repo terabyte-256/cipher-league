@@ -240,15 +240,43 @@ def gdelt_article_count(query,w,deadline=None):
             if retry_delay>=deadline-time.monotonic():raise TimeoutError('GDELT retry exceeds time budget') from ex
             time.sleep(retry_delay)
     series=result.get('timeline',[])
-    if not series or not isinstance(series[0].get('data'),list):raise ValueError('Invalid GDELT timeline')
+    if not series or not isinstance(series[0].get('data'),list):raise ValueError('Invalid GDELT timeline: '+json.dumps(result)[:80])
     count=sum(int(round(float(x['value']))) for x in series[0]['data'] if x.get('value') is not None)
     return count,url
+
+
+def social_targets():
+    """Asset-weeks still worth querying: missing ones first, then the stalest.
+
+    GDELT throttles too hard to cover everything in one run, so repeated runs
+    each pick up where the last one stopped, using what Supabase already holds.
+    """
+    assets=[a for a in ASSETS if a['provider']=='gdelt']
+    if not (URL and KEY):
+        return [(a,w) for a in assets for w in weeks()]
+    both=(WEEK-timedelta(days=7),WEEK)
+    stored=supabase('asset_week_scores',query='?select=asset_slug,week_start,updated_at'
+        +'&week_start=in.('+','.join(iso(w) for w in both)+')'
+        +'&asset_slug=in.('+','.join(quote(a['slug']) for a in assets)+')&limit=1000')
+    seen={(r['asset_slug'],r['week_start']):datetime.fromisoformat(r['updated_at'].replace('Z','+00:00')) for r in stored}
+    targets=[]
+    for a in assets:
+        for w in both:
+            at=seen.get((a['slug'],iso(w)))
+            if at:
+                # A closed week fetched after it ended is final; an open week
+                # only needs refreshing about once a day.
+                if w<WEEK and at.date()>=w+timedelta(days=7):continue
+                if w==WEEK and NOW-at<timedelta(hours=20):continue
+            targets.append((at or datetime.min.replace(tzinfo=timezone.utc),w,a))
+    targets.sort(key=lambda t:(t[0],t[1]))
+    return [(a,w) for _,w,a in targets]
 
 
 def ingest_social():
     out=[]
     STATUS['GDELT'].setdefault('pending',0)
-    targets=[(a,w) for a in ASSETS if a['provider']=='gdelt' for w in weeks()]
+    targets=social_targets()
     deadline=time.monotonic()+GDELT_TIME_BUDGET
     for index,(a,w) in enumerate(targets):
         if time.monotonic()>=deadline:
