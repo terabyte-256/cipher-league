@@ -121,6 +121,104 @@ begin
 end $$;
 reset role;
 
+-- Rankings use only the four latest closed weeks, falling back to the open week.
+do $$
+declare v_pos text;v_assets text[];v_week date;v_rank integer;v_avg numeric;v_weeks integer;
+begin
+ v_pos:=(select a.position from public.assets a where a.active group by a.position having not exists(select 1 from public.asset_week_scores s join public.assets x on x.slug=s.asset_slug where x.position=a.position and s.week_start<date_trunc('week',now() at time zone 'utc')::date) order by a.position limit 1);
+ select array_agg(slug order by sort_order) into v_assets from (select slug,sort_order from public.assets where active and position=v_pos order by sort_order limit 5) a;
+ v_week:=date_trunc('week',now() at time zone 'utc')::date;
+ delete from public.asset_week_scores where asset_slug in (select slug from public.assets where position=v_pos);
+ insert into public.asset_week_scores(asset_slug,week_start,points,source_url)
+ values
+ (v_assets[1],v_week-7,100,'https://test.invalid'),(v_assets[1],v_week-14,100,'https://test.invalid'),
+ (v_assets[1],v_week-21,100,'https://test.invalid'),(v_assets[1],v_week-28,100,'https://test.invalid'),
+ (v_assets[1],v_week-35,500,'https://test.invalid'),(v_assets[2],v_week-7,24,'https://test.invalid'),
+ (v_assets[3],v_week,10,'https://test.invalid'),(v_assets[4],v_week+7,900,'https://test.invalid');
+ select rank,avg_points,weeks_scored into v_rank,v_avg,v_weeks from public.asset_rankings where asset_slug=v_assets[1];
+ if (v_rank,v_avg,v_weeks) is distinct from (1,100.0::numeric,4) then raise exception 'four closed week average incorrect: %, %, %',v_rank,v_avg,v_weeks;end if;
+ if (select rank from public.asset_rankings where asset_slug=v_assets[2])<>2 then raise exception 'scored ranking order incorrect';end if;
+ if (select (rank,avg_points,weeks_scored) from public.asset_rankings where asset_slug=v_assets[3]) is distinct from (3,10.0::numeric,1) then raise exception 'open week fallback incorrect';end if;
+ if (select avg_points from public.asset_rankings where asset_slug=v_assets[4]) is not null or (select rank from public.asset_rankings where asset_slug=v_assets[4])<=3 then raise exception 'future score should remain unscored';end if;
+ if (select avg_points from public.asset_rankings where asset_slug=v_assets[5]) is not null or (select rank from public.asset_rankings where asset_slug=v_assets[5])<=3 then raise exception 'missing score treated as zero';end if;
+end $$;
+
+-- Draft clock, timeout authorization, autodraft, and automatic lineups.
+set role authenticated;
+do $$
+declare v_league uuid;v_code text;v_slug text;v_deadline timestamptz;v_result boolean;v_zero uuid;v_auto uuid;v_pick integer;v_week date;v_lineup text[];
+begin
+ perform set_config('request.jwt.claim.sub','00000000-0000-0000-0000-000000000001',true);
+ v_league:=public.create_league('Clocked draft','Clock One',2,30);
+ select invite_code into v_code from public.leagues where id=v_league;
+ perform set_config('request.jwt.claim.sub','00000000-0000-0000-0000-000000000002',true);perform public.join_league(v_code,'Clock Two');
+ perform set_config('request.jwt.claim.sub','00000000-0000-0000-0000-000000000001',true);perform public.start_draft(v_league);
+ select pick_deadline into v_deadline from public.leagues where id=v_league;
+ if v_deadline is null or public.draft_clock(v_league) not between 1 and 30 then raise exception 'start_draft did not set a working timer';end if;
+ if public.auto_pick(v_league,1) then raise exception 'auto_pick ran before deadline';end if;
+ perform set_config('request.jwt.claim.sub','00000000-0000-0000-0000-000000000002',true);
+ if public.auto_pick(v_league,2) then raise exception 'auto_pick accepted wrong pick number';end if;
+ perform set_config('request.jwt.claim.sub','00000000-0000-0000-0000-000000000003',true);
+ if public.auto_pick(v_league,1) then raise exception 'auto_pick accepted non-member';end if;
+end $$;
+reset role;
+update public.leagues set pick_deadline=now()-interval '1 second' where name='Clocked draft';
+set role authenticated;
+do $$
+declare v_league uuid;v_deadline timestamptz;v_slug text;v_result boolean;v_code text;v_auto uuid;v_zero uuid;v_week date;v_lineup text[];v_count integer;
+begin
+ perform set_config('request.jwt.claim.sub','00000000-0000-0000-0000-000000000001',true);
+ select id into v_league from public.leagues where name='Clocked draft';
+ perform set_config('request.jwt.claim.sub','00000000-0000-0000-0000-000000000002',true);
+ if not public.auto_pick(v_league,1) then raise exception 'auto_pick failed after deadline';end if;
+ if not (select auto from public.draft_picks where league_id=v_league and pick_no=1) then raise exception 'timeout pick not marked auto';end if;
+ select pick_deadline into v_deadline from public.leagues where id=v_league;
+ if v_deadline<=now() then raise exception 'pick did not reset timer';end if;
+ perform public.set_autodraft(v_league,true);
+ if not (select auto from public.draft_picks where league_id=v_league and pick_no=2) then raise exception 'autodraft toggle on current turn did not pick';end if;
+ perform set_config('request.jwt.claim.sub','00000000-0000-0000-0000-000000000001',true);
+ select slug into v_slug from public.assets a where a.active and a.position='SOCIAL' and not exists(select 1 from public.draft_picks d where d.league_id=v_league and d.asset_slug=a.slug) order by a.slug limit 1;
+ perform public.make_pick(v_league,v_slug);
+ if (select pick_deadline from public.leagues where id=v_league)<=now() then raise exception 'manual pick did not reset timer';end if;
+
+ -- Every team on autodraft completes the draft at start; auto-lineup is applied at completion.
+ perform set_config('request.jwt.claim.sub','00000000-0000-0000-0000-000000000003',true);
+ v_auto:=public.create_league('Autodraft all','Auto One',2,0);select invite_code into v_code from public.leagues where id=v_auto;
+ perform set_config('request.jwt.claim.sub','00000000-0000-0000-0000-000000000004',true);perform public.join_league(v_code,'Auto Two');perform public.set_autodraft(v_auto,true);perform public.set_autodraft(v_auto,false);
+ if (select autodraft from public.league_members where league_id=v_auto and user_id=auth.uid()) then raise exception 'autodraft toggle off did not persist';end if;
+ perform public.set_autodraft(v_auto,true);
+ perform set_config('request.jwt.claim.sub','00000000-0000-0000-0000-000000000003',true);perform public.set_auto_lineup(v_auto,true);perform public.set_autodraft(v_auto,true);perform public.start_draft(v_auto);
+ if (select status from public.leagues where id=v_auto)<>'live' or (select count(*) from public.draft_picks where league_id=v_auto and auto)<>16 then raise exception 'all-autodraft league did not complete automatically';end if;
+ if (select count(*) from public.lineup_entries where league_id=v_auto and member_id='00000000-0000-0000-0000-000000000003' and effective_week=(select start_on from public.leagues where id=v_auto))<>7 then raise exception 'auto lineup missing at draft completion';end if;
+ if public.refresh_auto_lineups(v_auto)<>0 then raise exception 'auto lineup refresh was not idempotent';end if;
+ select array_agg(asset_slug order by slot) into v_lineup from public.lineup_entries where league_id=v_auto and member_id='00000000-0000-0000-0000-000000000003' and effective_week=(select start_on from public.leagues where id=v_auto);
+ perform public.set_lineup(v_auto,v_lineup);
+ if (select auto_lineup from public.league_members where league_id=v_auto and user_id=auth.uid()) then raise exception 'manual lineup save did not disable auto lineup';end if;
+
+ -- Zero seconds means no deadline and clock returns null.
+ perform set_config('request.jwt.claim.sub','00000000-0000-0000-0000-000000000005',true);
+ v_zero:=public.create_league('No timer','No Timer One',2,0);select invite_code into v_code from public.leagues where id=v_zero;
+ perform set_config('request.jwt.claim.sub','00000000-0000-0000-0000-000000000006',true);perform public.join_league(v_code,'No Timer Two');
+ perform set_config('request.jwt.claim.sub','00000000-0000-0000-0000-000000000005',true);perform public.start_draft(v_zero);
+ if public.draft_clock(v_zero) is not null or (select pick_deadline from public.leagues where id=v_zero) is not null then raise exception 'pick_seconds=0 created a timer';end if;
+end $$;
+reset role;
+
+-- Every introduced public function is explicitly protected from anon and clients for internals.
+do $$
+declare f text;r text;
+begin
+ foreach f in array array['create_league(text,text,integer,integer)','auto_pick(uuid,integer)','draft_clock(uuid)','set_autodraft(uuid,boolean)','set_auto_lineup(uuid,boolean)','refresh_auto_lineups(uuid)','_best_asset(uuid,integer)','_record_pick(uuid,uuid,integer,boolean)','_record_completion(uuid)','_run_autodraft(uuid)','_apply_auto_lineups(uuid,date)'] loop
+  if has_function_privilege('anon','public.'||f,'EXECUTE') then raise exception 'anon can execute %',f;end if;
+  if f like '\_%' then
+   if has_function_privilege('authenticated','public.'||f,'EXECUTE') or has_function_privilege('service_role','public.'||f,'EXECUTE') then raise exception 'client/service role can execute internal %',f;end if;
+  else
+   if not has_function_privilege('authenticated','public.'||f,'EXECUTE') then raise exception 'authenticated cannot execute %',f;end if;
+  end if;
+ end loop;
+ if has_function_privilege('anon','public.is_league_member(uuid)','EXECUTE') then raise exception 'anon can execute RPC';end if;
+end $$;
+
 -- Feed each auto-created lineup seven one-point rows so score aggregation has a known result.
 insert into public.asset_week_scores(asset_slug,week_start,points,event_count,source_url)
 select distinct x.asset_slug,l.start_on,1,1,'https://test.invalid/score'

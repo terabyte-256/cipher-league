@@ -20,15 +20,15 @@ Every point traces to a public source the player can open (CISA KEV, GitHub, GDE
 
 ## Operating Context
 
-1. Create a league, or join one with an invite code or link. No account or email.
-2. The commissioner starts an eight-round snake draft. Rounds 1 to 7 fill one position each, in order: DFIR, SOCIAL, SOC, VULN, DEF, LANG, AI. Round 8 is one bench pick from any position.
-3. Each week every player starts one pick per position. The bench pick can replace only a starter in its own position. Lineups lock Monday 00:00 UTC.
+1. Create a league, or join one with an invite code or link. Choose time per pick (30s, 60s, 90s default, 2 min, 5 min, 1 hour, 8 hours, or no timer). No account or email needed.
+2. The commissioner starts an eight-round snake draft. Rounds 1 to 7 fill one position each, in order: DFIR, SOCIAL, SOC, VULN, DEF, LANG, AI. Round 8 is one bench pick from any position. With a pick timer, a draft only advances on timeout while at least one team has the page open. Managers can turn on autodraft to pick the highest-ranked candidate automatically.
+3. Each week every player starts one pick per position. The bench pick can replace only a starter in its own position. Lineups lock Monday 00:00 UTC. Managers can turn on automatic weekly lineup setting.
 4. Seven match weeks, head to head; ties allowed; no playoffs.
 
 ## Capabilities and Constraints
 
 - Static site on GitHub Pages (plain HTML, CSS and JavaScript, no build step); Supabase for anonymous sessions, data and realtime.
-- Guests can browse the draft pool (268 candidates), the rules and the source feed before joining. This must stay.
+- Guests can browse the draft pool (268 candidates), player ranks, the rules and the source feed before joining. This must stay.
 - A player's identity lives on one device; leaving the device cannot be undone.
 - Scores are public indicators, not counts of hacking incidents or judgments of a vendor's security.
 - GDELT throttling leaves many Social Engineering scores pending. Defense (stock) scores are pending: no licensed data key is configured. The UI must show pending as pending.

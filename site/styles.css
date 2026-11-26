@@ -42,6 +42,7 @@ main:focus{outline:none}
 
 /* The next action: first thing on every screen */
 .next{display:flex;flex-direction:column;align-items:flex-start;gap:12px;padding-bottom:24px;border-bottom:4px solid var(--ink);margin-bottom:28px}
+.next h1,.next p{max-width:100%;overflow-wrap:anywhere}
 .next p{font-size:1.0625rem}
 .actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 
@@ -115,8 +116,18 @@ input::placeholder{color:#5d646d}
 .chip .ln{width:28px;height:28px;font-size:.8125rem}
 .note{background:var(--floor);padding:14px 16px;border-radius:4px;max-width:none}
 .note.bad{background:#fbe9ec;color:#7d0a1d}
+.form-error{margin-bottom:14px}
 .note+.note,.note+section,.explain{margin-top:16px}
 .explain{margin:0 0 16px}
+
+/* Clock & Toggles */
+.clock{display:inline-flex;align-items:center;gap:8px;font-weight:700;padding:4px 12px;border:2px solid var(--ink);border-radius:4px;min-height:44px;font-variant-numeric:tabular-nums}
+.next p.clock{font-size:1.0625rem}
+.clock span{font-weight:800;font-size:1.25rem}
+.toggle{display:inline-flex;align-items:center;gap:8px;font-size:.9375rem;font-weight:700;cursor:pointer;min-height:44px}
+.toggle input{width:20px;height:20px;min-height:0;cursor:pointer;accent-color:var(--ink)}
+.toggle-wrap{margin-bottom:16px}
+.auto{font-size:.6875rem;font-weight:700;color:var(--muted);text-transform:lowercase;border:1px solid var(--rule);border-radius:2px;padding:0 3px;margin-left:4px;vertical-align:middle}
 
 /* Draft: candidates beside the route */
 .forms+details{margin-top:24px}
@@ -155,10 +166,13 @@ dd{margin:0;padding-bottom:10px;border-bottom:1px solid var(--rule)}
 .lineup{list-style:none;margin:0;padding:0;border-top:2px solid var(--ink)}
 .lineup li{display:grid;grid-template-columns:32px minmax(0,1fr) minmax(0,320px);gap:4px 16px;align-items:center;padding:10px 0;border-bottom:1px solid var(--rule)}
 .lineup label small{display:block;font-weight:400;color:var(--muted);font-size:.8125rem;line-height:1.4}
+.lineup label{min-width:0;overflow-wrap:anywhere}
 
 /* Matchup: seven positions side by side on one scale */
 .weekbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .versus{display:grid;grid-template-columns:minmax(0,1fr) 40px minmax(0,1fr);gap:12px;align-items:end;margin-bottom:8px}
+.versus .team{min-width:0;overflow-wrap:anywhere}
+.versus .team strong{display:block;overflow-wrap:anywhere}
 .versus .team:last-child{text-align:left}
 .versus .team:first-child{text-align:right}
 .total{font-size:3rem;font-weight:800;line-height:1.05;display:block}
@@ -177,6 +191,7 @@ dd{margin:0;padding-bottom:10px;border-bottom:1px solid var(--rule)}
 .fill{height:100%;background:var(--ink);min-width:3px}
 .bar.live .fill{background:var(--floor);border:3px solid var(--ink)}
 .bar.pending .track{height:0;border-top:4px dashed #8a919a}
+.bar.unscored .track{height:0;border-top:1px solid var(--rule)}
 .pts{font-weight:800;min-width:3ch;font-size:1.0625rem}
 .bar.pending .pts{font-weight:600;font-size:.8125rem;color:var(--muted)}
 .legend{display:flex;gap:6px 20px;flex-wrap:wrap;font-size:.8125rem;color:var(--muted);margin-top:10px}
@@ -185,7 +200,7 @@ dd{margin:0;padding-bottom:10px;border-bottom:1px solid var(--rule)}
 .legend i.live{background:var(--floor);border:3px solid var(--ink)}
 .legend i.pending{height:0;background:none;border-top:4px dashed #8a919a}
 table.table{width:100%;border-collapse:collapse;border-top:2px solid var(--ink)}
-.table th,.table td{text-align:right;padding:10px 6px;border-bottom:1px solid var(--rule)}
+.table th,.table td{text-align:right;padding:10px 6px;border-bottom:1px solid var(--rule);overflow-wrap:anywhere}
 .table th:nth-child(2),.table td:nth-child(2){text-align:left;overflow-wrap:anywhere}
 .table th{font-size:.8125rem;color:var(--muted)}
 .table tr.me td{font-weight:800;background:var(--floor)}
@@ -219,7 +234,7 @@ details>div{padding-bottom:20px}
  h1{font-size:1.75rem}
  .sign-in{flex-wrap:wrap;padding:0;gap:0}
  .brand{padding:10px 16px;min-height:56px}
- .who{padding-right:16px;max-width:45%}
+ .who{padding-right:16px;flex:0 1 36%;max-width:36%}
  #navigation{order:3;width:100%;display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid #3a3e45}
  .tab{min-height:48px;padding:0 4px;border-width:4px 0}
  main{padding:20px 16px 48px}
@@ -247,5 +262,10 @@ details>div{padding-bottom:20px}
  .rows>li{gap:10px}
  .total{font-size:2.25rem}
  .versus,.compare li{gap:8px}
+ .table{table-layout:fixed}
+ .table th:first-child,.table td:first-child{width:28px}
+ .table th:nth-child(3),.table td:nth-child(3),.table th:nth-child(4),.table td:nth-child(4),.table th:nth-child(5),.table td:nth-child(5){width:36px;white-space:nowrap}
+ .table th:last-child,.table td:last-child{width:48px;white-space:nowrap}
+ .table th,.table td{padding-inline:2px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}

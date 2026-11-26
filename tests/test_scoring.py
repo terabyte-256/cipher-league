@@ -11,6 +11,9 @@ score=importlib.util.module_from_spec(spec)
 spec.loader.exec_module(score)
 
 class ScoringTests(unittest.TestCase):
+    def setUp(self):
+        score.STATUS.clear()
+
     def test_positions_have_eight_choices(self):
         for p in ['DFIR','SOCIAL','SOC','VULN','DEF','LANG','AI']:
             self.assertGreaterEqual(len([a for a in score.ASSETS if a['position']==p]),32)
@@ -99,10 +102,121 @@ class ScoringTests(unittest.TestCase):
                 {'asset_slug':'done','week_start':cur,'updated_at':after},
                 {'asset_slug':'stale','week_start':prev,'updated_at':old},
                 {'asset_slug':'stale','week_start':cur,'updated_at':old}]
+        def mock_sb(table, *args, **kwargs):
+            if table == 'draft_picks': return []
+            return stored
         with patch.object(score,'ASSETS',assets),patch.object(score,'URL','https://x'),patch.object(score,'KEY','k'),\
-             patch.object(score,'supabase',return_value=stored):
+             patch.object(score,'supabase',side_effect=mock_sb):
             got=[(a['slug'],score.iso(w)) for a,w in score.social_targets()]
         self.assertEqual(got,[('missing',prev),('missing',cur),('stale',prev),('stale',cur)])
+
+    def test_social_targets_prioritizes_drafted_assets(self):
+        assets=[{'slug':s,'provider':'gdelt','key':s} for s in ('drafted_missing','drafted_stale','undrafted_missing','undrafted_stale','drafted_done')]
+        prev=score.iso(score.WEEK-score.timedelta(days=7));cur=score.iso(score.WEEK)
+        after=score.NOW.isoformat();old=(score.NOW-score.timedelta(days=30)).isoformat()
+        scores=[{'asset_slug':'drafted_done','week_start':prev,'updated_at':after},
+                {'asset_slug':'drafted_done','week_start':cur,'updated_at':after},
+                {'asset_slug':'drafted_stale','week_start':prev,'updated_at':old},
+                {'asset_slug':'drafted_stale','week_start':cur,'updated_at':old},
+                {'asset_slug':'undrafted_stale','week_start':prev,'updated_at':old},
+                {'asset_slug':'undrafted_stale','week_start':cur,'updated_at':old}]
+        picks=[{'asset_slug':'drafted_missing'},{'asset_slug':'drafted_stale'},{'asset_slug':'drafted_done'}]
+        def mock_sb(table, *args, **kwargs):
+            if table == 'draft_picks': return picks
+            return scores
+        with patch.object(score,'ASSETS',assets),patch.object(score,'URL','https://x'),patch.object(score,'KEY','k'),\
+             patch.object(score,'supabase',side_effect=mock_sb):
+            got=[(a['slug'],score.iso(w)) for a,w in score.social_targets()]
+        expected=[
+            ('drafted_missing',prev),('drafted_missing',cur),
+            ('drafted_stale',prev),('drafted_stale',cur),
+            ('undrafted_missing',prev),('undrafted_missing',cur),
+            ('undrafted_stale',prev),('undrafted_stale',cur),
+        ]
+        self.assertEqual(got,expected)
+
+    def test_social_targets_paginates_draft_picks_over_1000(self):
+        assets=[{'slug':'late_drafted','provider':'gdelt','key':'late_drafted'},{'slug':'undrafted','provider':'gdelt','key':'undrafted'}]
+        prev=score.iso(score.WEEK-score.timedelta(days=7));cur=score.iso(score.WEEK)
+        def mock_sb(table, *args, **kwargs):
+            if table == 'draft_picks':
+                query = kwargs.get('query','') if kwargs else (args[2] if len(args)>2 else '')
+                if 'offset=0' in query:
+                    return [{'asset_slug':f'dummy_{i}'} for i in range(1000)]
+                elif 'offset=1000' in query:
+                    return [{'asset_slug':'late_drafted'}]
+                return []
+            return []
+        with patch.object(score,'ASSETS',assets),patch.object(score,'URL','https://x'),patch.object(score,'KEY','k'),\
+             patch.object(score,'supabase',side_effect=mock_sb):
+            got=[(a['slug'],score.iso(w)) for a,w in score.social_targets()]
+        self.assertEqual(got,[('late_drafted',prev),('late_drafted',cur),('undrafted',prev),('undrafted',cur)])
+
+    def test_social_targets_fallback_on_draft_picks_error(self):
+        assets=[{'slug':'alpha','provider':'gdelt','key':'alpha'},{'slug':'beta','provider':'gdelt','key':'beta'}]
+        prev=score.iso(score.WEEK-score.timedelta(days=7));cur=score.iso(score.WEEK)
+        old=(score.NOW-score.timedelta(days=30)).isoformat()
+        scores=[{'asset_slug':'alpha','week_start':prev,'updated_at':old},
+                {'asset_slug':'alpha','week_start':cur,'updated_at':old}]
+        err=HTTPError('https://x/rest/v1/draft_picks',500,'Internal Server Error',{},None)
+        def mock_sb(table, *args, **kwargs):
+            if table == 'draft_picks':
+                raise err
+            return scores
+        with patch.object(score,'ASSETS',assets),patch.object(score,'URL','https://x'),patch.object(score,'KEY','k'),\
+             patch.object(score,'supabase',side_effect=mock_sb):
+            got=[(a['slug'],score.iso(w)) for a,w in score.social_targets()]
+        err.close()
+        self.assertEqual(got,[('beta',prev),('beta',cur),('alpha',prev),('alpha',cur)])
+
+    def test_social_targets_without_db_credentials_unchanged(self):
+        assets=[{'slug':'one','provider':'gdelt','key':'one'},{'slug':'two','provider':'gdelt','key':'two'}]
+        with patch.object(score,'ASSETS',assets),patch.object(score,'URL',''),patch.object(score,'KEY',''),\
+             patch.object(score,'weeks',return_value=(date(2026,11,16),)):
+            got=[(a['slug'],score.iso(w)) for a,w in score.social_targets()]
+        self.assertEqual(got,[('one','2026-11-16'),('two','2026-11-16')])
+
+    def test_ai_snapshots_pagination_over_1000_rows(self):
+        monday=score.WEEK
+        page0=[{'asset_slug':f'dummy_{i}','sampled_on':monday.isoformat(),'likes':10} for i in range(1000)]
+        page1=[{'asset_slug':'deepseek-r1','sampled_on':monday.isoformat(),'likes':100},
+               {'asset_slug':'deepseek-r1','sampled_on':(monday+timedelta(days=1)).isoformat(),'likes':120}]
+        def mock_sb(table, *args, **kwargs):
+            query = kwargs.get('query','') if kwargs else (args[2] if len(args)>2 else '')
+            if 'offset=0' in query:
+                return page0
+            elif 'offset=1000' in query:
+                return page1
+            return []
+        assets=[{'slug':'deepseek-r1','provider':'huggingface','key':'deepseek-ai/DeepSeek-R1'}]
+        with patch.object(score,'ASSETS',assets),patch.object(score,'URL','https://example.supabase.co'),patch.object(score,'KEY','test'),\
+             patch.object(score,'get',return_value={'likes':120}),patch.object(score,'upsert'),\
+             patch.object(score,'supabase',side_effect=mock_sb):
+            result=score.ingest_ai()
+        self.assertTrue(result)
+        self.assertEqual(result[0]['asset_slug'],'deepseek-r1')
+        self.assertEqual(result[0]['points'],10)
+
+    def test_ingest_social_timeout_error_marks_pending_and_breaks(self):
+        assets=[{'provider':'gdelt','slug':'first','key':'first'},{'provider':'gdelt','slug':'second','key':'second'}]
+        with patch.object(score,'ASSETS',assets),patch.object(score,'weeks',return_value=(date(2026,11,16),)),\
+             patch.object(score,'gdelt_article_count',side_effect=TimeoutError('GDELT time budget exhausted')):
+            score.STATUS['GDELT']['pending'] = 0
+            score.STATUS['GDELT']['failed'] = 0
+            rows=score.ingest_social()
+        self.assertEqual(rows,[])
+        self.assertEqual(score.STATUS['GDELT']['pending'],2)
+        self.assertEqual(score.STATUS['GDELT']['failed'],0)
+
+    def test_auto_lineup_refresh_is_best_effort(self):
+        with patch.object(score,'URL',''),patch.object(score,'KEY',''),patch.object(score,'urlopen') as open_url:
+            score.refresh_auto_lineups()
+            open_url.assert_not_called()
+        error=HTTPError('https://example.supabase.co/rest/v1/rpc/refresh_auto_lineups',404,'Not Found',{},None)
+        with patch.object(score,'URL','https://example.supabase.co'),patch.object(score,'KEY','service'),\
+             patch.object(score,'urlopen',side_effect=error):
+            score.refresh_auto_lineups()
+        error.close()
 
     def test_gdelt_empty_object_is_zero_but_other_shapes_are_not(self):
         with patch.object(score,'get',return_value={}),patch.object(score.time,'sleep'):

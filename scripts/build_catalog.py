@@ -315,13 +315,17 @@ def main():
     for a in ASSETS:
         a['source_url'] = asset_url(a)
     (ROOT / 'site/data/assets.json').write_text(json.dumps(ASSETS, indent=2, ensure_ascii=False) + '\n')
-    rows = ','.join('\n (' + ','.join(sql_quote(v) for v in
-                   (a['slug'], a['name'], a['position'], asset_url(a))) + ')'
-                   for a in ASSETS)
+    position_order = {}
+    rows = []
+    for a in ASSETS:
+        position_order[a['position']] = position_order.get(a['position'], 0) + 1
+        rows.append('\n (' + ','.join(sql_quote(v) for v in
+                     (a['slug'], a['name'], a['position'], asset_url(a), position_order[a['position']])) + ')')
+    rows = ','.join(rows)
     (ROOT / 'supabase/seed.sql').write_text(
         '-- Regenerated using python scripts/build_catalog.py; safe to rerun on an existing v3 installation.\n'
-        'insert into public.assets(slug,name,position,source_url) values' + rows + '\n'
-        'on conflict (slug) do update set name=excluded.name, position=excluded.position, source_url=excluded.source_url;\n')
+        'insert into public.assets(slug,name,position,source_url,sort_order) values' + rows + '\n'
+        'on conflict (slug) do update set name=excluded.name, position=excluded.position, source_url=excluded.source_url, sort_order=excluded.sort_order;\n')
     print('Catalog generated:', len(ASSETS), 'assets', ', '.join(f'{p}={counts[p]}' for p in POSITIONS))
 
 

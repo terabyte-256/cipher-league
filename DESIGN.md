@@ -126,6 +126,9 @@ Flat. Hierarchy comes from rules (4px under the next action, 2px above a list, 1
 - **Row list:** bullet, name and detail, one control at the end.
 - **Draft route (signature):** a table of rounds by teams; the line reverses each round. Made picks solid, future dashed, the current station enlarged.
 - **Seats:** league members as stations on a vertical line; open seats dashed.
+- **Draft clock:** `.clock` indicator with 2px ink border, tabular numbers, updated directly each second.
+- **Toggles:** `.toggle` checkbox controls with 44px touch targets and sentence-case labels.
+- **Auto pick mark:** `.auto` compact border badge marking server-made picks.
 
 ## Do's and Don'ts
 

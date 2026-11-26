@@ -80,6 +80,18 @@ def upsert(table,rows,conflict):
     print(f'UPSERT {table}: {len(rows)} rows')
 
 
+def refresh_auto_lineups():
+    if not (URL and KEY):
+        return
+    req=Request(URL+'/rest/v1/rpc/refresh_auto_lineups',data=b'{"p_league_id":null}',method='POST',headers={
+        'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json'})
+    try:
+        with urlopen(req,timeout=30) as response:
+            response.read()
+    except Exception as ex:
+        print('Auto lineup refresh skipped:',str(ex)[:300],file=sys.stderr)
+
+
 def monday(day): return day-timedelta(days=day.weekday())
 def clamp(n,lo,hi): return max(lo,min(hi,n))
 def weeks():
@@ -252,11 +264,28 @@ def social_targets():
 
     GDELT throttles too hard to cover everything in one run, so repeated runs
     each pick up where the last one stopped, using what Supabase already holds.
+    Drafted assets in any league come first.
     """
     assets=[a for a in ASSETS if a['provider']=='gdelt']
     if not (URL and KEY):
         return [(a,w) for a in assets for w in weeks()]
     both=(WEEK-timedelta(days=7),WEEK)
+    drafted_slugs=set()
+    try:
+        offset=0
+        limit=1000
+        while True:
+            picks=supabase('draft_picks',query=f'?select=asset_slug&order=league_id,pick_no&limit={limit}&offset={offset}')
+            if not picks or not isinstance(picks,list):break
+            for r in picks:
+                if isinstance(r,dict) and r.get('asset_slug'):
+                    drafted_slugs.add(r['asset_slug'])
+            if len(picks)<limit:break
+            offset+=limit
+    except Exception as ex:
+        print('draft_picks query failed, falling back to unprioritized order:',ex,file=sys.stderr)
+        drafted_slugs=set()
+
     stored=supabase('asset_week_scores',query='?select=asset_slug,week_start,updated_at'
         +'&week_start=in.('+','.join(iso(w) for w in both)+')'
         +'&asset_slug=in.('+','.join(quote(a['slug']) for a in assets)+')&limit=1000')
@@ -271,7 +300,7 @@ def social_targets():
                 if w<WEEK and at.date()>=w+timedelta(days=7):continue
                 if w==WEEK and NOW-at<timedelta(hours=20):continue
             targets.append((at or datetime.min.replace(tzinfo=timezone.utc),w,a))
-    targets.sort(key=lambda t:(t[0],t[1]))
+    targets.sort(key=lambda t:(0 if t[2]['slug'] in drafted_slugs else 1,t[0],t[1]))
     return [(a,w) for _,w,a in targets]
 
 
@@ -291,6 +320,10 @@ def ingest_social():
                 f'{count} English-language news articles (coverage, not confirmed attacks)',
                 url,metric=f'{count} news mentions',event_count=count))
             STATUS['GDELT']['success']+=1
+        except TimeoutError:
+            STATUS['GDELT']['pending']+=len(targets)-index
+            print(f'GDELT time budget exhausted; {len(targets)-index} asset-weeks remain pending',file=sys.stderr)
+            break
         except Exception as ex:
             STATUS['GDELT']['failed']+=1
             print('GDELT skipped',a['slug'],iso(w),str(ex)[:140],file=sys.stderr)
@@ -314,7 +347,15 @@ def ingest_ai():
     if not (URL and KEY):
         print('AI scoring requires historical daily snapshots in Supabase: first run records the baseline.')
         return []
-    stored=supabase('ai_snapshots',query='?select=asset_slug,sampled_on,likes&sampled_on=gte.'+iso(WEEK-timedelta(days=15))+'&limit=1000')
+    stored=[]
+    offset=0
+    limit=1000
+    while True:
+        batch=supabase('ai_snapshots',query=f'?select=asset_slug,sampled_on,likes&sampled_on=gte.{iso(WEEK-timedelta(days=15))}&order=asset_slug,sampled_on&limit={limit}&offset={offset}')
+        if not batch or not isinstance(batch,list):break
+        stored.extend(batch)
+        if len(batch)<limit:break
+        offset+=limit
     by_slug=defaultdict(list)
     for r in stored:
         by_slug[r['asset_slug']].append(r)
@@ -386,6 +427,7 @@ def main():
             print('ERROR IN',name,':',str(ex)[:300],file=sys.stderr)
             STATUS[name]['failed']+=1;failed_sources.append(name)
     upsert('asset_week_scores',rows,'asset_slug,week_start')
+    refresh_auto_lineups()
     print('SUMMARY:',json.dumps(dict(STATUS)))
     print('Total updated score records:',len(rows))
     if not rows:

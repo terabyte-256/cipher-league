@@ -1,6 +1,6 @@
 # Cipher League v3.1 — 268 real-world draft assets, seven positions, multiplayer
 
-Cipher League is a **deployable browser game**, not a hosted service. v3.1 expands the pool from 83 to **268 unique sourced assets** and adds a public, searchable scouting catalog with position filters and pagination. Managers create private leagues, invite friends, make atomic eight-round snake-draft picks, and compete for seven weekly matchups. **Every lineup starts one asset in each of seven different positions**, plus an eighth bench asset that can replace a starter *only in the same position*.
+Cipher League is a **deployable browser game**, not a hosted service. v3.1 expands the pool from 83 to **268 unique sourced assets** and adds a public, searchable scouting catalog with position filters, rank ordering and pagination. Managers create private leagues, choose a pick timer, invite friends, make atomic eight-round snake-draft picks, and compete for seven weekly matchups. **Every lineup starts one asset in each of seven different positions**, plus an eighth bench asset that can replace a starter *only in the same position*.
 
 | Position | What you draft | Real-world scoring input | Weekly formula |
 |---|---|---|---|
@@ -31,13 +31,21 @@ An eight-team league drafts 64 unique assets in eight rounds, leaving **204 undr
 
 The app has four sections: **Play** (what to do next: draft or lineup), **Scores** (weekly matches and standings), **Explore** (players, rules and score sources, open to guests) and **League** (create, join, invite). The draft is drawn as a route that reverses each round; every position keeps one letter and colour. Product and design notes are in `PRODUCT.md` and `DESIGN.md`.
 
-**Existing v3 Supabase setup:** you do not need to drop or recreate tables. Run the *new* `supabase/seed.sql` in the Supabase SQL Editor to upsert the extra assets, then publish the updated `site/` folder and enable the importer. Existing candidate slugs are preserved; the seed does not delete old draft picks. **New v3.1 setup:** run `schema.sql` followed by `seed.sql` as usual.
+### Draft Clock, Autodraft, and Rankings
+
+- **Pick Timer:** When creating a league, commissioners choose a time per pick: 30s, 60s, 90s (default), 2 min, 5 min, 1 hour, 8 hours, or No timer. During the draft, a visible countdown displays the remaining seconds from the server's deadline. Note plainly that with a timer, a draft only advances on timeout while at least one team has the page open.
+- **Autodraft:** Managers can toggle "Autodraft: pick the top-ranked player for me" in the lobby or during the draft. If enabled or if the clock expires, the server automatically selects the highest-ranked undrafted candidate for the turn. Picks made by the server are marked with an "auto" badge.
+- **Rankings:** The `asset_rankings` view computes position rank and scoring average over recent closed weeks. The draft list is ordered by rank (and by average in round 8). Exploring by a single position sorts candidates by rank.
+- **Automatic Lineups:** Managers can toggle "Set my lineup automatically each week" to start their best-ranked players each week. Saving a manual lineup turns automatic lineups off.
+- **Backward Compatibility:** If connected to a database that has not yet been upgraded with new columns or RPCs, the site continues to work without error by hiding new controls and gracefully retrying league creation if `p_pick_seconds` is unrecognized.
+
+**Existing v3 Supabase setup:** you do not need to drop or recreate tables. In the Supabase SQL Editor run the *new* `supabase/schema.sql`, then the new `supabase/seed.sql` (it needs the columns the schema adds), then publish the updated `site/` folder and enable the importer. Existing candidate slugs are preserved; the seed does not delete old draft picks. **New v3.1 setup:** run `schema.sql` followed by `seed.sql` as usual.
 
 **Provider integrity:** locally checked all 268 identifiers for unique slugs, provider keys, source URLs and category size. GitHub repository and Hugging Face model availability can still change. Run `GH_TOKEN=... python3 scripts/validate_catalog.py --online` on an internet-connected machine to check live repo/model IDs and report CISA vendor-alias history. We could not complete remote checks in the offline build environment. For DEF, verify the current stock symbols and display rights with your licensed provider. Archived or inactive assets can have zero scores; missing provider responses remain pending rather than fabricated.
 
 **Rate limits:** The expanded importer processes the current week daily and also rechecks the previous week on Monday–Wednesday UTC. To force previous-week backfill later, set `CIPHER_BACKFILL_PREVIOUS=1` for an importer run. Authenticated GitHub search requires `GH_TOKEN`; without a token, GitHub scoring is skipped. The workflow's timeout is extended to 50 minutes for 268 assets. Market-feed quota/licensing restrictions still apply; adding choices does not automatically make scores available.
 
-**Social engineering scores:** GDELT throttles shared runners, so `.github/workflows/social.yml` runs every 3 hours and fetches only the asset-weeks that are missing or stale (current and previous week). Rows not fetched yet stay pending.
+**Social engineering scores:** GDELT throttles shared runners, so `.github/workflows/social.yml` runs every 3 hours and fetches only the asset-weeks that are missing or stale (current and previous week), prioritizing assets drafted in any league first so standings stay current. Rows not fetched yet stay pending.
 
 ### Stock-market data licensing
 
