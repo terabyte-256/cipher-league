@@ -154,6 +154,14 @@ const byePage=run('scoresPage()');
 assert(byePage.includes('you have no match'),'bye week detected in scores');
 assert(byePage.includes('class="legend"'),'score legend displayed on bye week');
 assert(byePage.includes('total'),'player picks and total shown on bye week');
+// A week that has not started shows who plays, with nothing pending or left out yet.
+run("S.members=S.members.slice(0,2);S.week=0;S.weekScores=[];S.defScores=[];S.savedStart=S.league.start_on;S.savedLineups=S.lineups;S.league.start_on='2099-01-05';S.lineups=S.lineups.map(x=>({...x,effective_week:'2099-01-05'}));");
+const upcomingWeek=run('scoresPage()');
+assert(upcomingWeek.includes('Starts Monday Jan 5'));
+for(const text of ['Pending','Not counted','scores in','class="legend"','No tech stock scores','except tech stocks'])
+ assert(!upcomingWeek.includes(text),`upcoming week does not mention: ${text}`);
+assert(upcomingWeek.includes('class="compare"'),'upcoming week still lists both lineups');
+run("S.league.start_on=S.savedStart;S.lineups=S.savedLineups;");
 console.log('PASS: 268 assets; pagination and bench filters;  seven positions; ordered snake draft; 8-team schedule; byes; lineup and missing-score detection');
 
 // Anonymous sign-in: no email flow, session minted lazily on create/join.

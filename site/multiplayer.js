@@ -283,6 +283,8 @@ function playPage(){
 // ---------- Scores ----------
 function side(slug,start,status){
   if(!slug)return '<div class="side"><small>No lineup</small></div>';
+  // A week that has not started has nothing pending or left out yet: just show who starts.
+  if(status==='upcoming')return `<div class="side"><strong>${esc(asset(slug).name)}</strong></div>`;
   const a=asset(slug),item=scoreRow(slug,start),waived=a.position==='DEF'&&!defAvailable(start),width=item?Math.max(0,Math.min(35,item.points))/35*100:0;
   const cves=S.kevs.filter(e=>e.asset_slug===slug&&e.date_added>=start&&e.date_added<plusDays(start,7)).slice(0,3);
   const state=item?(status==='final'?'final':'live'):waived?'unscored':'pending';
@@ -291,9 +293,11 @@ function side(slug,start,status){
   return `<div class="side"><strong>${esc(a.name)}</strong><div class="bar ${state}"><span class="track">${item&&width?`<span class="fill" style="width:${width}%"></span>`:''}</span><span class="pts"><span class="sr">${stateLabel}</span>${item?esc(item.points):waived?'Not counted':'Pending'}</span></div>${item?`<small>${esc(item.detail)}</small><small>${links}</small>`:''}</div>`;
 }
 function totalBlock(id,w){
+  const name=`<strong>${esc(member(id)?.team_name)}${id===myId()?' (you)':''}</strong>`;
+  if(weekStatus(w)==='upcoming')return `<div class="team">${name}</div>`;
   const t=weekTotal(id,w),status=weekStatus(w),denominator=defAvailable(plusDays(S.league.start_on,w*7))?7:6;
   const stateLabel=t.measured?(status==='final'?'Final total: ':'Provisional total: '):'Pending total: ';
-  return `<div class="team"><strong>${esc(member(id)?.team_name)}${id===myId()?' (you)':''}</strong><span class="total${t.measured?'':' none'}"><span class="sr">${stateLabel}</span>${t.measured?esc(t.points):'Pending'}</span><span class="muted small">${t.measured} of ${denominator} scores in</span></div>`;
+  return `<div class="team">${name}<span class="total${t.measured?'':' none'}"><span class="sr">${stateLabel}</span>${t.measured?esc(t.points):'Pending'}</span><span class="muted small">${t.measured} of ${denominator} scores in</span></div>`;
 }
 function comparison(a,b,w){
   const start=plusDays(S.league.start_on,w*7),status=weekStatus(w),left=weekStarters(a,start),right=weekStarters(b,start);
@@ -314,14 +318,14 @@ function scoresPage(){
   const ours=mine?(mine[0]===myId()?mine:[mine[1],mine[0]]):null;
   const others=pairs.filter(p=>p!==mine);
   const title=ours?`Week ${w+1} against ${member(ours[1])?.team_name}`:`Week ${w+1}: you have no match`;
-  const stockMissing=!defAvailable(start),text={upcoming:`Starts Monday ${prettyDate(start)}. Nothing is scored yet.`,live:`In progress until ${prettyDate(plusDays(start,6))}. Totals are provisional and change as data arrives.`,waiting:'The week has ended, but some scores have not arrived. It stays open until they do.',final:'Final.'}[status];
+  const stockMissing=!defAvailable(start),text={upcoming:`Starts Monday ${prettyDate(start)}. Scores arrive once the week is under way.`,live:`In progress until ${prettyDate(plusDays(start,6))}. Totals are provisional and change as data arrives.`,waiting:'The week has ended, but some scores have not arrived. It stays open until they do.',final:'Final.'}[status];
   const nav=`<button class="btn alt" type="button" id="week-prev" data-week="${w-1}"${w===0?' disabled':''}>Previous week</button><button class="btn alt" type="button" id="week-next" data-week="${w+1}"${w===6?' disabled':''}>Next week</button><span class="muted small">Week ${w+1} of 7</span>${button('refresh-room','Refresh scores','quiet')}`;
-  const legend='<div class="legend"><span><i></i>Final</span><span><i class="live"></i>Provisional</span><span><i class="pending"></i>Pending: waiting for source data</span></div>';
+  const legend=status==='upcoming'?'':'<div class="legend"><span><i></i>Final</span><span><i class="live"></i>Provisional</span><span><i class="pending"></i>Pending: waiting for source data</span></div>';
   const table=`<table class="table"><thead><tr><th scope="col">#</th><th scope="col">Team</th><th scope="col">Won</th><th scope="col">Lost</th><th scope="col">Tied</th><th scope="col">Points</th></tr></thead><tbody>${standings().map((t,i)=>`<tr${t.id===myId()?' class="me"':''}><td>${i+1}</td><td>${esc(t.name)}</td><td>${t.w}</td><td>${t.l}</td><td>${t.t}</td><td>${t.pf}</td></tr>`).join('')}</tbody></table>`;
-  const stockNote=stockMissing&&w<=currentWeek()?'<p class="note">No tech stock scores are available for this week. Matches can still become final without them.</p>':'';
+  const stockNote=stockMissing&&status!=='upcoming'?'<p class="note">No tech stock scores are available for this week. Matches can still become final without them.</p>':'';
   const matchSection=ours?`<section>${comparison(ours[0],ours[1],w)}${legend}</section>`
     :(myMember()?`<section>${byeDisplay(myId(),w)}${legend}</section>`:`<section>${legend}</section>`);
-  return `${next(title,text,`<div class="weekbar">${nav}</div>`)}${stockNote}${matchSection}${others.length?section('Other matches',others.map(([a,b])=>`<details data-detail-key="match-${esc(a)}-${esc(b)}"><summary>${esc(member(a)?.team_name)} against ${esc(member(b)?.team_name)}</summary><div>${comparison(a,b,w)}</div></details>`).join('')):''}${section('Standings',table+`<p class="muted small">A week counts once it has ended and every starter has a score${stockMissing?' except tech stocks, when no stock scores are available':''}.</p>`)}`;
+  return `${next(title,text,`<div class="weekbar">${nav}</div>`)}${stockNote}${matchSection}${others.length?section('Other matches',others.map(([a,b])=>`<details data-detail-key="match-${esc(a)}-${esc(b)}"><summary>${esc(member(a)?.team_name)} against ${esc(member(b)?.team_name)}</summary><div>${comparison(a,b,w)}</div></details>`).join('')):''}${section('Standings',table+`<p class="muted small">A week counts once it has ended and every starter has a score${stockMissing&&status!=='upcoming'?' except tech stocks, when no stock scores are available':''}.</p>`)}`;
 }
 
 // ---------- Explore ----------
