@@ -43,14 +43,18 @@ S.leagueId='l';S.members=[{user_id:'user0',team_name:'Blue',seat:0},{user_id:'us
 assert(run('draftPage()').includes('Your pick: forensics'));
 assert(run('draftPage()').includes('class="route"'),'draft route drawn');
 assert(run('draftPage()').includes('Volatility 3'));
-assert(run('draftPage()').includes('Source for Volatility 3'));
+assert(run('draftPage()').includes('href="https://github.com/volatilityfoundation/volatility3" target="_blank" rel="noopener noreferrer">Volatility 3</a>'),'a player name links to its source');
 assert(run('draftPage()').includes('33 available'));
-assert(!run('draftPage()').includes('<strong>Python</strong>'));
+assert(!run('draftPage()').includes('>Python</a>'));
 run(`S.picks=[{pick_no:1,member_id:'user0',asset_slug:'volatility'}, {pick_no:2,member_id:'user1',asset_slug:'autopsy'}]`);
 assert(run('draftPage()').includes('Red is picking'));
 assert(run('draftPage()').includes('Ways attackers trick people'));
-assert(run('draftPage()').includes('<strong>Phishing</strong>'));
-assert(!run('draftPage()').includes('Source for Volatility 3'));
+assert(run('draftPage()').includes('>Phishing</a></strong>'));
+// Topics and vendors link to their own search, not a shared home page.
+assert(run("playerUrl(asset('smishing'))").includes('mode=artlist'));
+assert(run("playerUrl(asset('smishing'))").includes('SMS+phishing'));
+assert(run("playerUrl(asset('cisco-kev'))").endsWith('?search_api_fulltext=Cisco'));
+assert.strictEqual(run("playerLink(asset('no-such-player'))"),'no-such-player');
 assert.strictEqual(run('nextPicker().user_id'),'user1','Reverse order in snake round two');
 const socialAsset=assets.find(a=>a.position==='SOCIAL');
 run(`S.publicWeekScores=[{asset_slug:'volatility',week_start:'2026-11-16',points:14},{asset_slug:'autopsy',week_start:'2026-11-09',points:8},{asset_slug:${JSON.stringify(socialAsset.slug)},week_start:'2026-11-16',points:14}];`);
@@ -97,7 +101,7 @@ assert(run('draftPage()').includes('Show 36 more'));
 run("S.draftPosition='AI'");
 const aiBench=run('draftPage()');
 assert(aiBench.includes('All positions'));
-assert((aiBench.match(/aria-label="Source for |Taken by /g)||[]).length>=36);
+assert((aiBench.match(/class="player-link"|Taken by /g)||[]).length>=36);
 assert(!aiBench.includes('Source for Phishing'));
 
 const all=[];

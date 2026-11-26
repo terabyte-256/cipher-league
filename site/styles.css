@@ -78,6 +78,12 @@ section>h2,.head{margin-bottom:14px}
 .grow strong{display:block;font-weight:700;line-height:1.35}
 .grow small{display:block;color:var(--muted);font-size:.875rem;line-height:1.45}
 .grow a{font-size:.875rem}
+/* A player's name is a link wherever it appears: it reads as a name, underlined. */
+a.player-link{color:inherit;font-size:inherit;overflow-wrap:anywhere}
+a.player-link:hover{color:var(--link)}
+.choice{display:flex;align-items:center;gap:12px;min-width:0}
+.choice select{flex:1;min-width:0}
+.choice a{font-size:.875rem;min-height:44px;display:inline-flex;align-items:center}
 .rows>li.taken{background:var(--floor);padding-inline:8px}
 .rows>li.taken strong{color:var(--muted);font-weight:600}
 .end{flex:none;text-align:right}
@@ -164,7 +170,7 @@ dd{margin:0;padding-bottom:10px;border-bottom:1px solid var(--rule)}
 
 /* Lineup */
 .lineup{list-style:none;margin:0;padding:0;border-top:2px solid var(--ink)}
-.lineup li{display:grid;grid-template-columns:32px minmax(0,1fr) minmax(0,320px);gap:4px 16px;align-items:center;padding:10px 0;border-bottom:1px solid var(--rule)}
+.lineup li{display:grid;grid-template-columns:32px minmax(0,1fr) minmax(0,380px);gap:4px 16px;align-items:center;padding:10px 0;border-bottom:1px solid var(--rule)}
 .lineup label small{display:block;font-weight:400;color:var(--muted);font-size:.8125rem;line-height:1.4}
 .lineup label{min-width:0;overflow-wrap:anywhere}
 

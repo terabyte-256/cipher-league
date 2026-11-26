@@ -57,6 +57,13 @@ const safeUrl = url=>{try {const u=new URL(url);return u.protocol==='https:'?u.h
 const anchor = (url,text,label)=>`<a href="${esc(safeUrl(url))}" target="_blank" rel="noopener noreferrer"${label?` aria-label="${esc(label)}"`:''}>${esc(text)}</a>`;
 
 // ---------- Shared pieces ----------
+// Where a player's name leads. Topics and vendors share one catalog address, so narrow those.
+function playerUrl(a){
+  if(a.provider==='gdelt')return 'https://api.gdeltproject.org/api/v2/doc/doc?'+new URLSearchParams({query:a.key+' sourcelang:english',mode:'artlist',format:'html',timespan:'1week'});
+  if(a.provider==='cisa')return a.source_url+'?search_api_fulltext='+encodeURIComponent(a.key);
+  return a.source_url;
+}
+const playerLink = a=>a.source_url?`<a class="player-link" href="${esc(safeUrl(playerUrl(a)))}" target="_blank" rel="noopener noreferrer">${esc(a.name)}</a>`:esc(a.name);
 const bullet = code=>{const p=position(code);return `<span class="ln p-${esc(p.code)}" title="${esc(p.name)}" aria-hidden="true">${esc(p.letter)}</span>`;};
 const button = (action,label,type='',disabled=false,extra='')=>`<button class="btn ${type}" type="button" data-action="${esc(action)}"${disabled?' disabled':''} ${extra}>${esc(label)}</button>`;
 const go = (page,label,type='',tab='')=>`<button class="btn ${type}" type="button" data-page="${page}"${tab?` data-tab="${tab}"`:''}>${esc(label)}</button>`;
@@ -190,14 +197,14 @@ function route(){
       if(s===first){cls.push(back?'to-mid':'from-mid');if(r>0)cls.push('turn-in');}
       if(s===last){cls.push(back?'from-mid':'to-mid');if(r<7)cls.push('turn-down');}
       const auto=pick?.auto?' <span class="auto">auto</span>':'';
-      const label=pick?`<span class="picked">${esc(asset(pick.asset_slug).name)}${auto}</span>`:`<span class="sr">${now?'picking now':'not picked yet'}</span>`;
+      const label=pick?`<span class="picked">${playerLink(asset(pick.asset_slug))}${auto}</span>`:`<span class="sr">${now?'picking now':'not picked yet'}</span>`;
       return `<td class="${cls.join(' ')}"><span class="stop">${no}</span>${label}</td>`;
     }).join('');
     return `<tr><th scope="row">${bullet(code)}<span class="sr">Round ${r+1}, ${esc(position(code).name)}</span></th>${cells}</tr>`;
   }).join('');
   return `<table class="route${n>4?' crowded':''}"><caption><h2>Draft route</h2></caption><thead><tr><th class="corner"><span class="sr">Round</span></th>${seats.map(m=>`<th scope="col"${m.user_id===myId()?' class="me"':''}><span class="full">${esc(m.team_name)}</span><span class="short" aria-hidden="true">${esc(initials(m.team_name))}</span></th>`).join('')}</tr></thead><tbody>${rows}</tbody></table>`;
 }
-function latestPicks(){const recent=S.picks.slice(-5).reverse();return recent.length?`<div class="phone-only"><h3>Latest picks</h3><ul class="rows">${recent.map(p=>`<li>${bullet(asset(p.asset_slug).position)}<span class="grow"><strong>${esc(asset(p.asset_slug).name)}${p.auto?' <span class="auto">auto</span>':''}</strong><small>${esc(member(p.member_id)?.team_name||'Unknown')}, pick ${esc(p.pick_no)}</small></span></li>`).join('')}</ul></div>`:'';}
+function latestPicks(){const recent=S.picks.slice(-5).reverse();return recent.length?`<div class="phone-only"><h3>Latest picks</h3><ul class="rows">${recent.map(p=>`<li>${bullet(asset(p.asset_slug).position)}<span class="grow"><strong>${playerLink(asset(p.asset_slug))}${p.auto?' <span class="auto">auto</span>':''}</strong><small>${esc(member(p.member_id)?.team_name||'Unknown')}, pick ${esc(p.pick_no)}</small></span></li>`).join('')}</ul></div>`:'';}
 function draftPage(){
   const n=S.members.length,round=Math.min(roundNo(),7),required=POSITIONS[round]||null,picker=nextPicker();
   if(n>0&&S.picks.length>=n*8)return next('The draft is finished','Your first lineup is being set up.',button('refresh-room','Refresh'))+route();
@@ -226,7 +233,7 @@ function draftPage(){
   const title=mine?`Your pick: ${required?required.name.replace(/^(?!AI)./,c=>c.toLowerCase()):'a bench player'}`:`${picker?.team_name||'Another team'} is picking`;
   const text=`Round ${round+1} of 8. `+(required?`${required.tracks} ${required.how}`:'Choose from any position. A bench player can only replace your starter in the same position.');
   const bench=required?'':`<select id="draft-pos-filter" aria-label="Filter by position"><option value="ALL">All positions</option>${POSITIONS.map(p=>`<option value="${p.code}"${S.draftPosition===p.code?' selected':''}>${esc(p.name)}</option>`).join('')}</select>`;
-  const list=candidates.slice(0,S.draftVisible).map(a=>{const by=taken.get(a.slug),confirm=S.confirmPick===a.slug;return `<li class="${by?'taken':''}">${bullet(a.position)}<span class="grow"><strong>${esc(a.name)}</strong><small>${esc(assetScoreLabel(a.slug))}</small>${by?`<small>Taken by ${esc(member(by)?.team_name||'another team')}</small>`:anchor(a.source_url,'Source',`Source for ${a.name}`)}</span>${!by&&mine?(confirm?button('confirm-pick','Confirm','',false,`id="pick-${esc(a.slug)}" data-slug="${esc(a.slug)}"`)+button('cancel-pick','Cancel','alt',false,`id="cancel-${esc(a.slug)}" data-slug="${esc(a.slug)}"`):button('pick','Draft','',false,`id="pick-${esc(a.slug)}" data-slug="${esc(a.slug)}" aria-label="Draft ${esc(a.name)}"`)):''}</li>`;}).join('');
+  const list=candidates.slice(0,S.draftVisible).map(a=>{const by=taken.get(a.slug),confirm=S.confirmPick===a.slug;return `<li class="${by?'taken':''}">${bullet(a.position)}<span class="grow"><strong>${playerLink(a)}</strong><small>${esc(assetScoreLabel(a.slug))}</small>${by?`<small>Taken by ${esc(member(by)?.team_name||'another team')}</small>`:''}</span>${!by&&mine?(confirm?button('confirm-pick','Confirm','',false,`id="pick-${esc(a.slug)}" data-slug="${esc(a.slug)}"`)+button('cancel-pick','Cancel','alt',false,`id="cancel-${esc(a.slug)}" data-slug="${esc(a.slug)}"`):button('pick','Draft','',false,`id="pick-${esc(a.slug)}" data-slug="${esc(a.slug)}" aria-label="Draft ${esc(a.name)}"`)):''}</li>`;}).join('');
   const more=candidates.length>S.draftVisible?`<div class="actions">${button('more-candidates',`Show ${Math.min(36,candidates.length-S.draftVisible)} more`,'alt')}</div>`:'';
   const choices=section(mine?'Choose one':'Who is in this round',`<div class="filters"><input id="asset-search" type="search" aria-label="Search players in this round" placeholder="Search by name" value="${esc(S.query)}">${bench}</div>${list?`<ul class="rows">${list}</ul>`:empty('Nothing matches that search.')}${more}`,`<span class="muted small">${candidates.filter(a=>!taken.has(a.slug)).length} available</span>`);
   const clock=(S.clockSeconds!==null&&S.clockSeconds!==undefined&&S.league?.pick_seconds!==0&&S.league?.pick_seconds!==undefined)?`<p class="clock">Time left <span id="draft-clock">${formatClock(S.clockSeconds)}</span></p>`:'';
@@ -242,12 +249,12 @@ function lineupPage(){
     const finalStarters=weekStarters(myId(),finalWeek);
     const starterRows=POSITIONS.map((p,i)=>{
       const slug=finalStarters[i],a=asset(slug);
-      return `<li>${bullet(p.code)}<span class="grow"><strong>${esc(a.name)}</strong><small>${esc(p.name)}</small></span></li>`;
+      return `<li>${bullet(p.code)}<span class="grow"><strong>${playerLink(a)}</strong><small>${esc(p.name)}</small></span></li>`;
     }).join('');
     const chosen=new Set(finalStarters);
     const benchRows=owned.filter(p=>!chosen.has(p.asset_slug)).map(o=>{
       const a=asset(o.asset_slug);
-      return `<li>${bullet(a.position)}<span class="grow"><strong>${esc(a.name)}</strong><small>Bench · ${esc(position(a.position).name)}</small></span></li>`;
+      return `<li>${bullet(a.position)}<span class="grow"><strong>${playerLink(a)}</strong><small>Bench · ${esc(position(a.position).name)}</small></span></li>`;
     }).join('');
     return `${notice}<section class="starters"><h2>Starters</h2><ul class="rows">${starterRows}</ul></section>${benchRows?section('Bench',`<ul class="rows">${benchRows}</ul>`):''}`;
   }
@@ -258,13 +265,13 @@ function lineupPage(){
     const options=owned.map(o=>asset(o.asset_slug)).filter(a=>a.position===p.code);
     const selected=autoOn?(saved[i]||options[0]?.slug||''):(S.lineup[p.code]||saved[i]||options[0]?.slug||'');
     if(selected)S.lineup[p.code]=selected;
-    return `<li>${bullet(p.code)}<label for="roster-slot-${p.code}">${esc(p.name)}<small>${esc(p.tracks)}</small></label><select id="roster-slot-${p.code}" data-slot="${p.code}"${autoOn?' disabled':''}>${options.map(a=>`<option value="${esc(a.slug)}"${a.slug===selected?' selected':''}>${esc(a.name)}</option>`).join('')}</select></li>`;
+    return `<li>${bullet(p.code)}<label for="roster-slot-${p.code}">${esc(p.name)}<small>${esc(p.tracks)}</small></label><div class="choice"><select id="roster-slot-${p.code}" data-slot="${p.code}"${autoOn?' disabled':''}>${options.map(a=>`<option value="${esc(a.slug)}"${a.slug===selected?' selected':''}>${esc(a.name)}</option>`).join('')}</select>${selected?anchor(playerUrl(asset(selected)),'Source',`Source for ${asset(selected).name}`):''}</div></li>`;
   }).join('');
   const dirty=POSITIONS.some((p,i)=>saved[i]!==S.lineup[p.code]);
   const chosen=new Set(Object.values(S.lineup));
-  const bench=owned.filter(p=>!chosen.has(p.asset_slug)).map(o=>{const a=asset(o.asset_slug);return `<li>${bullet(a.position)}<span class="grow"><strong>${esc(a.name)}</strong><small>On the bench. It can only start as your ${esc(position(a.position).code)} pick.</small></span></li>`;}).join('');
+  const bench=owned.filter(p=>!chosen.has(p.asset_slug)).map(o=>{const a=asset(o.asset_slug);return `<li>${bullet(a.position)}<span class="grow"><strong>${playerLink(a)}</strong><small>On the bench. It can only start as your ${esc(position(a.position).code)} pick.</small></span></li>`;}).join('');
   const playing=today()>=S.league.start_on?weekStarters(myId(),plusDays(S.league.start_on,currentWeek()*7)):[];
-  const locked=playing.length?`<details><summary>Playing this week (locked)</summary><div><ul class="rows">${playing.map(slug=>`<li>${bullet(asset(slug).position)}<span class="grow"><strong>${esc(asset(slug).name)}</strong></span></li>`).join('')}</ul></div></details>`:'';
+  const locked=playing.length?`<details><summary>Playing this week (locked)</summary><div><ul class="rows">${playing.map(slug=>`<li>${bullet(asset(slug).position)}<span class="grow"><strong>${playerLink(asset(slug))}</strong></span></li>`).join('')}</ul></div></details>`:'';
   const localLock=new Date(dateUTC(week)).toLocaleString(undefined,{dateStyle:'medium',timeStyle:'short'});
   const action=dirty?button('save-lineup','Save lineup'):go('scores','Follow your match');
   const autoToggle=(myMember()&&myMember().auto_lineup!==undefined&&S.league?.pick_seconds!==undefined)?`<label class="toggle"><input type="checkbox" id="toggle-auto-lineup" data-action="toggle-auto-lineup"${autoOn?' checked':''}><span>Set my lineup automatically each week</span></label>`:'';
@@ -284,13 +291,13 @@ function playPage(){
 function side(slug,start,status){
   if(!slug)return '<div class="side"><small>No lineup</small></div>';
   // A week that has not started has nothing pending or left out yet: just show who starts.
-  if(status==='upcoming')return `<div class="side"><strong>${esc(asset(slug).name)}</strong></div>`;
+  if(status==='upcoming')return `<div class="side"><strong>${playerLink(asset(slug))}</strong></div>`;
   const a=asset(slug),item=scoreRow(slug,start),waived=a.position==='DEF'&&!defAvailable(start),width=item?Math.max(0,Math.min(35,item.points))/35*100:0;
   const cves=S.kevs.filter(e=>e.asset_slug===slug&&e.date_added>=start&&e.date_added<plusDays(start,7)).slice(0,3);
   const state=item?(status==='final'?'final':'live'):waived?'unscored':'pending';
   const stateLabel=item?(status==='final'?'Final: ':'Provisional: '):waived?'':'Pending: ';
   const links=item?[anchor(item.source_url,'Source',`Source for ${a.name}`),...cves.map(v=>anchor('https://nvd.nist.gov/vuln/detail/'+v.cve_id,v.cve_id))].join(' · '):'';
-  return `<div class="side"><strong>${esc(a.name)}</strong><div class="bar ${state}"><span class="track">${item&&width?`<span class="fill" style="width:${width}%"></span>`:''}</span><span class="pts"><span class="sr">${stateLabel}</span>${item?esc(item.points):waived?'Not counted':'Pending'}</span></div>${item?`<small>${esc(item.detail)}</small><small>${links}</small>`:''}</div>`;
+  return `<div class="side"><strong>${playerLink(a)}</strong><div class="bar ${state}"><span class="track">${item&&width?`<span class="fill" style="width:${width}%"></span>`:''}</span><span class="pts"><span class="sr">${stateLabel}</span>${item?esc(item.points):waived?'Not counted':'Pending'}</span></div>${item?`<small>${esc(item.detail)}</small><small>${links}</small>`:''}</div>`;
 }
 function totalBlock(id,w){
   const name=`<strong>${esc(member(id)?.team_name)}${id===myId()?' (you)':''}</strong>`;
@@ -336,7 +343,7 @@ function playersTab(){
   }
   const chips=[['ALL',`All ${S.assets.length}`],...POSITIONS.map(p=>[p.code,p.name])].map(([code,label])=>`<button type="button" class="chip" id="chip-${code}" data-pos="${code}" aria-pressed="${S.poolPosition===code}">${code==='ALL'?'':bullet(code)}${esc(label)}</button>`).join('');
   const about=S.poolPosition==='ALL'?'':`<p class="note explain">${esc(position(S.poolPosition).tracks)} ${esc(position(S.poolPosition).how)}</p>`;
-  const list=matches.slice(0,S.poolVisible).map(a=>`<li class="player">${bullet(a.position)}<span class="grow"><strong>${esc(a.name)}</strong><small>${esc(S.poolPosition==='ALL'?position(a.position).name:a.key)}</small><small>${esc(assetScoreLabel(a.slug))}</small></span>${anchor(a.source_url,'Source',`Source for ${a.name}`)}</li>`).join('');
+  const list=matches.slice(0,S.poolVisible).map(a=>`<li class="player">${bullet(a.position)}<span class="grow"><strong>${playerLink(a)}</strong><small>${esc(S.poolPosition==='ALL'?position(a.position).name:a.key)}</small><small>${esc(assetScoreLabel(a.slug))}</small></span></li>`).join('');
   return `<div class="chips" role="group" aria-label="Filter by position">${chips}</div>${about}<div class="filters"><input id="pool-search" type="search" aria-label="Search players" placeholder="Search by name" value="${esc(S.poolQuery)}"></div><p class="muted small">${matches.length} of ${S.assets.length} players</p>${list?`<ul class="rows">${list}</ul>`:empty('Nothing matches that search.')}${matches.length>S.poolVisible?`<div class="actions">${button('more-pool',`Show ${Math.min(48,matches.length-S.poolVisible)} more`,'alt')}</div>`:''}`;
 }
 function rulesTab(){
@@ -351,10 +358,10 @@ function sourcesTab(){
     const pWeek=pRows.reduce((latest,r)=>r.week_start>latest?r.week_start:latest,'');
     if(!pWeek)return section(p.name,empty(`No ${p.name.toLowerCase()} scores yet.`));
     const rows=pRows.filter(e=>e.week_start===pWeek).sort((a,b)=>b.points-a.points||asset(a.asset_slug).name.localeCompare(asset(b.asset_slug).name)).slice(0,3);
-    return section(`${p.name} · week of ${prettyDate(pWeek)}`,rows.length?`<ul class="rows">${rows.map(e=>`<li>${bullet(p.code)}<span class="grow"><strong>${esc(asset(e.asset_slug).name)}: ${esc(e.points)} points</strong><small>${esc(e.detail)}</small></span>${anchor(e.source_url,'Source',`Source for ${asset(e.asset_slug).name}`)}</li>`).join('')}</ul>`:empty(`No ${p.name.toLowerCase()} scores for this week.`));
+    return section(`${p.name} · week of ${prettyDate(pWeek)}`,rows.length?`<ul class="rows">${rows.map(e=>`<li>${bullet(p.code)}<span class="grow"><strong>${playerLink(asset(e.asset_slug))}: ${esc(e.points)} points</strong><small>${esc(e.detail)}</small></span>${anchor(e.source_url,'Source',`Source for ${asset(e.asset_slug).name}`)}</li>`).join('')}</ul>`:empty(`No ${p.name.toLowerCase()} scores for this week.`));
   }).join(''):empty('No scores have been recorded yet.');
   const events=(S.feed?.events||[]).slice(0,30);
-  const kev=events.length?`<ul class="rows">${events.map(e=>`<li>${bullet('VULN')}<span class="grow"><strong>${esc(asset(e.asset_slug).name)}: ${esc(e.cve_id)}</strong><small>Added ${esc(prettyDate(e.date_added))}. ${esc(e.product)}: ${esc(e.title)}</small></span>${anchor('https://nvd.nist.gov/vuln/detail/'+e.cve_id,'Details',`Details for ${e.cve_id}`)}</li>`).join('')}</ul>`:empty('No vulnerability entries have been imported yet.');
+  const kev=events.length?`<ul class="rows">${events.map(e=>`<li>${bullet('VULN')}<span class="grow"><strong>${playerLink(asset(e.asset_slug))}: ${esc(e.cve_id)}</strong><small>Added ${esc(prettyDate(e.date_added))}. ${esc(e.product)}: ${esc(e.title)}</small></span>${anchor('https://nvd.nist.gov/vuln/detail/'+e.cve_id,'Details',`Details for ${e.cve_id}`)}</li>`).join('')}</ul>`:empty('No vulnerability entries have been imported yet.');
   return section('Where scores come from',about)+section('Recent scores',scores)+section('Newly exploited vulnerabilities',kev);
 }
 function explorePage(){
